@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 @ToString
-public class RowByRowSet implements Iterator<Row> {
+public class RowIterator implements Iterator<Row> {
     private final ResultSet resultSet;
     private boolean started = false;
 
-    public RowByRowSet(ResultSet resultSet) {
+    public RowIterator(ResultSet resultSet) {
         this.resultSet = resultSet;
     }
 

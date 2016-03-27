@@ -8,10 +8,7 @@ import net.avicus.quest.database.DatabaseException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @ToString
 public class Select implements Filterable {
@@ -68,13 +65,26 @@ public class Select implements Filterable {
     }
 
     public String build() {
+        return build(false);
+    }
+
+    public String build(boolean count) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
-        sql.append(this.getColumnString());
+
+        // count?
+        if (count)
+            sql.append("COUNT(").append(this.getColumnString()).append(")");
+        else
+            sql.append(this.getColumnString());
+
         sql.append(" FROM ");
+
+        // table
         sql.append("`");
         sql.append(this.table);
         sql.append("`");
+
         if (this.filter.isPresent()) {
             Optional<String> where = this.filter.get().build();
             if (where.isPresent()) {
@@ -90,21 +100,34 @@ public class Select implements Filterable {
         return sql.toString();
     }
 
-    public RowSet execute() throws DatabaseException {
-        String sql = this.build();
+    public int count() throws DatabaseException {
+        String sql = this.build(true);
         PreparedStatement statement = this.database.createQueryStatement(sql, false);
         try {
-            return new RowSet(statement.executeQuery());
+            RowList set = new RowList(statement.executeQuery());
+            if (set.size() != 1)
+                throw new SQLException("Invalid return values for COUNT");
+            return (int) set.first().getValues().get(0);
         } catch (SQLException e) {
             throw new DatabaseException(String.format("Failed statement: %s", sql), e);
         }
     }
 
-    public RowByRowSet executeByRow() throws DatabaseException {
+    public RowList execute() throws DatabaseException {
+        String sql = this.build();
+        PreparedStatement statement = this.database.createQueryStatement(sql, false);
+        try {
+            return new RowList(statement.executeQuery());
+        } catch (SQLException e) {
+            throw new DatabaseException(String.format("Failed statement: %s", sql), e);
+        }
+    }
+
+    public RowIterator executeByRow() throws DatabaseException {
         String sql = this.build();
         PreparedStatement statement = this.database.createQueryStatement(sql, true);
         try {
-            return new RowByRowSet(statement.executeQuery());
+            return new RowIterator(statement.executeQuery());
         } catch (SQLException e) {
             throw new DatabaseException(String.format("Failed statement: %s", sql), e);
         }

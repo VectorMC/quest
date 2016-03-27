@@ -1,5 +1,6 @@
 package net.avicus.quest.model;
 
+import lombok.Getter;
 import lombok.ToString;
 import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.query.Row;
@@ -11,13 +12,20 @@ import java.util.Iterator;
 import java.util.List;
 
 @ToString
-public class ModelSet<M extends Model> implements Iterable<M> {
-    private final Table<M> table;
-    private final List<M> rows;
+public class ModelList<M extends Model> extends ArrayList<M> {
+    @Getter private final Table<M> table;
 
-    public ModelSet(Table<M> table, ResultSet resultSet) {
+    public ModelList(Table<M> table, ResultSet resultSet) {
         this.table = table;
-        this.rows = createRows(resultSet);
+        addAll(createRows(resultSet));
+    }
+
+    public M first() {
+        return get(0);
+    }
+
+    public M last() {
+        return get(size() - 1);
     }
 
     private List<M> createRows(ResultSet resultSet) {
@@ -30,10 +38,5 @@ public class ModelSet<M extends Model> implements Iterable<M> {
             throw new DatabaseException(e);
         }
         return list;
-    }
-
-    @Override
-    public Iterator<M> iterator() {
-        return this.rows.iterator();
     }
 }

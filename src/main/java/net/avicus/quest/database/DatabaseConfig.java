@@ -28,6 +28,10 @@ public class DatabaseConfig {
         return url.toString();
     }
 
+    public static Builder builder(String host, String database, String username, String password) {
+        return new Builder(host, database, username, password);
+    }
+
     public static class Builder {
         private String host;
         private String database;
@@ -35,7 +39,7 @@ public class DatabaseConfig {
         private String password;
         private boolean reconnectEnabled;
 
-        public Builder(String host, String database, String username, String password) {
+        Builder(String host, String database, String username, String password) {
             this.host = host;
             this.database = database;
             this.username = username;

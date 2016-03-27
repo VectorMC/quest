@@ -42,19 +42,19 @@ public class ModelSelect<M extends Model> implements Filterable {
         return this;
     }
 
-    public ModelSet<M> execute() throws DatabaseException {
+    public ModelList<M> execute() throws DatabaseException {
         PreparedStatement statement = this.table.getDatabase().createQueryStatement(this.select.build(), false);
         try {
-            return new ModelSet<>(this.table, statement.executeQuery());
+            return new ModelList<>(this.table, statement.executeQuery());
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
     }
 
-    public ModelByModelSet<M> executeByModel() throws DatabaseException {
+    public ModelIterator<M> executeByModel() throws DatabaseException {
         PreparedStatement statement = this.table.getDatabase().createQueryStatement(this.select.build(), true);
         try {
-            return new ModelByModelSet<>(this.table, statement.executeQuery());
+            return new ModelIterator<>(this.table, statement.executeQuery());
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }

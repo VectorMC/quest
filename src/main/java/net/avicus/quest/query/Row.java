@@ -4,9 +4,7 @@ import lombok.ToString;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @ToString
 public class Row {
@@ -31,8 +29,18 @@ public class Row {
         return this.values;
     }
 
-    public Set<String> getColumns() {
-        return this.values.keySet();
+    public List<String> getColumns() {
+        List<String> columns = new ArrayList<>();
+        for (String column : this.values.keySet())
+            columns.add(column);
+        return columns;
+    }
+
+    public List<Object> getValues() {
+        List<Object> values = new ArrayList<>();
+        for (Object column : this.values.values())
+            values.add(column);
+        return values;
     }
 
     public String getString(String field) throws ClassCastException {
@@ -41,6 +49,10 @@ public class Row {
 
     public int getInteger(String field) throws ClassCastException {
         return get(Integer.class, field);
+    }
+
+    public boolean getBoolean(String field) throws ClassCastException {
+        return get(boolean.class, field);
     }
 
     public Object get(String field) {
