@@ -1,17 +1,14 @@
 package net.avicus.quest.model;
 
 import lombok.Getter;
-import lombok.ToString;
 import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.query.Row;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-@ToString
 public class ModelList<M extends Model> extends ArrayList<M> {
     @Getter private final Table<M> table;
 
@@ -38,5 +35,10 @@ public class ModelList<M extends Model> extends ArrayList<M> {
             throw new DatabaseException(e);
         }
         return list;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

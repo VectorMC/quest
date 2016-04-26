@@ -8,7 +8,10 @@ import net.avicus.quest.database.DatabaseException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @ToString
 public class Select implements Filterable {
@@ -17,6 +20,7 @@ public class Select implements Filterable {
     private final List<String> columns;
     private Optional<Filter> filter;
     private Optional<String> order;
+    private Optional<String> limit;
 
     public Select(Database database, String table) {
         this.database = database;
@@ -24,6 +28,7 @@ public class Select implements Filterable {
         this.columns = new ArrayList<>();
         this.filter = Optional.empty();
         this.order = Optional.empty();
+        this.limit = Optional.empty();
     }
 
     @Override
@@ -55,6 +60,16 @@ public class Select implements Filterable {
         return this;
     }
 
+    public Select limit(int count) {
+        this.limit = Optional.of(count + "");
+        return this;
+    }
+
+    public Select limit(int from, int to) {
+        this.limit = Optional.of(from + "," + to);
+        return this;
+    }
+
     public Select order(String field) {
         return this.order(field, "ASC");
     }
@@ -65,26 +80,13 @@ public class Select implements Filterable {
     }
 
     public String build() {
-        return build(false);
-    }
-
-    public String build(boolean count) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
-
-        // count?
-        if (count)
-            sql.append("COUNT(").append(this.getColumnString()).append(")");
-        else
-            sql.append(this.getColumnString());
-
+        sql.append(this.getColumnString());
         sql.append(" FROM ");
-
-        // table
         sql.append("`");
         sql.append(this.table);
         sql.append("`");
-
         if (this.filter.isPresent()) {
             Optional<String> where = this.filter.get().build();
             if (where.isPresent()) {
@@ -96,21 +98,12 @@ public class Select implements Filterable {
             sql.append(" ORDER BY ");
             sql.append(this.order.get());
         }
+        if (this.limit.isPresent()) {
+            sql.append(" LIMIT ");
+            sql.append(this.limit.get());
+        }
         sql.append(";");
         return sql.toString();
-    }
-
-    public int count() throws DatabaseException {
-        String sql = this.build(true);
-        PreparedStatement statement = this.database.createQueryStatement(sql, false);
-        try {
-            RowList set = new RowList(statement.executeQuery());
-            if (set.size() != 1)
-                throw new SQLException("Invalid return values for COUNT");
-            return (int) set.first().getValues().get(0);
-        } catch (SQLException e) {
-            throw new DatabaseException(String.format("Failed statement: %s", sql), e);
-        }
     }
 
     public RowList execute() throws DatabaseException {
@@ -134,7 +127,7 @@ public class Select implements Filterable {
     }
 
     private String getColumnString() {
-        if (this.columns.size() == 0)
+        if (this.columns.isEmpty())
             return "*";
         else {
             List<String> columns = new ArrayList<>(this.columns);

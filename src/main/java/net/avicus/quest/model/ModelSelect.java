@@ -1,7 +1,10 @@
 package net.avicus.quest.model;
 
 import net.avicus.quest.database.DatabaseException;
-import net.avicus.quest.query.*;
+import net.avicus.quest.query.Filter;
+import net.avicus.quest.query.Filterable;
+import net.avicus.quest.query.Operator;
+import net.avicus.quest.query.Select;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,6 +17,16 @@ public class ModelSelect<M extends Model> implements Filterable {
         this.table = table;
         this.select = new Select(table.getDatabase(), table.getName());
         this.select.columns(this.table.getColumns());
+    }
+
+    public ModelSelect<M> limit(int count) {
+        this.select.limit(count);
+        return this;
+    }
+
+    public ModelSelect<M> limit(int from, int to) {
+        this.select.limit(from, to);
+        return this;
     }
 
     public ModelSelect<M> order(String field) {
