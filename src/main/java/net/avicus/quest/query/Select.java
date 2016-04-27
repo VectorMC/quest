@@ -108,7 +108,7 @@ public class Select implements Filterable {
 
     public RowList execute() throws DatabaseException {
         String sql = this.build();
-        PreparedStatement statement = this.database.createQueryStatement(sql, false);
+        PreparedStatement statement = this.database.createQueryStatement(sql, true);
         try {
             return new RowList(statement.executeQuery());
         } catch (SQLException e) {
@@ -116,9 +116,9 @@ public class Select implements Filterable {
         }
     }
 
-    public RowIterator executeByRow() throws DatabaseException {
+    public RowIterator executeIterator() throws DatabaseException {
         String sql = this.build();
-        PreparedStatement statement = this.database.createQueryStatement(sql, true);
+        PreparedStatement statement = this.database.createQueryStatement(sql, false);
         try {
             return new RowIterator(statement.executeQuery());
         } catch (SQLException e) {
