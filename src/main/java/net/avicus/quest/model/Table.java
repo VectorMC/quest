@@ -148,6 +148,9 @@ public class Table<M extends Model> {
     }
 
     private String getColumnType(Field field, Column column) {
+        if (column.type().length() != 0)
+            return column.type();
+
         String type;
         if (field.getType() == String.class) {
             if (column.text())
@@ -159,6 +162,8 @@ public class Table<M extends Model> {
             type = "INT";
         else if (field.getType() == boolean.class)
             type = "TINYINT";
+        else if (field.getType() == Date.class)
+            type = "DATETIME";
         else
             throw new DatabaseException(field.getType().getSimpleName() + " is not supported.");
 

@@ -21,4 +21,6 @@ public @interface Column {
     boolean unique() default false;
 
     String def() default "";
+
+    String type() default "";
 }
