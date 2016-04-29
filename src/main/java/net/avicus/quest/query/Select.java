@@ -110,7 +110,9 @@ public class Select implements Filterable {
         String sql = this.build();
         PreparedStatement statement = this.database.createQueryStatement(sql, true);
         try {
-            return new RowList(statement.executeQuery());
+            RowList list = new RowList();
+            list.addRows(statement.executeQuery());
+            return list;
         } catch (SQLException e) {
             throw new DatabaseException(String.format("Failed statement: %s", sql), e);
         }

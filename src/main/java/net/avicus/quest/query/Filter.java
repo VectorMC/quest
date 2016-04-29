@@ -62,7 +62,7 @@ public class Filter implements Filterable {
     }
 
     public Filter and(String field, Object value, Operator operator) {
-        return (Filter) where(field, value, operator);
+        return where(field, value, operator);
     }
 
     public Filter and(Filter filter) {
@@ -112,7 +112,6 @@ public class Filter implements Filterable {
             if (str.isPresent())
                 sql += sql.length() == 0 ? str.get() : " OR " + str.get();
         }
-
 
         return Optional.of("(" + sql + ")");
     }

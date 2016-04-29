@@ -7,14 +7,12 @@ import net.avicus.quest.query.Row;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ModelList<M extends Model> extends ArrayList<M> {
     @Getter private final Table<M> table;
 
-    public ModelList(Table<M> table, ResultSet resultSet) {
+    public ModelList(Table<M> table) {
         this.table = table;
-        addAll(createRows(resultSet));
     }
 
     public M first() {
@@ -25,16 +23,13 @@ public class ModelList<M extends Model> extends ArrayList<M> {
         return get(size() - 1);
     }
 
-    private List<M> createRows(ResultSet resultSet) {
-        List<M> list = new ArrayList<>();
+    void addRows(ResultSet resultSet) {
         try {
-            while (resultSet.next()) {
-                list.add(this.table.newInstance(new Row(resultSet)));
-            }
+            while (resultSet.next())
+                add(this.table.newInstance(new Row(resultSet)));
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-        return list;
     }
 
     @Override
