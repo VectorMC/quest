@@ -1,5 +1,5 @@
 # Quest
-A stupid simple MySQL database API.
+A stupid simple MySQL database API. [Activerecord](https://github.com/rails/rails/tree/master/activerecord) users should feel somewhat at home.
 
 **Connect:**
 ```java
@@ -42,7 +42,7 @@ public class User extends Model {
 Table<User> users = new Table<>(database, "users", User.class);
 users.create(); // create table
 
-User user = new User("thekeenant", Date.from(Instant.now()));
+User user = new User("thekeenant", new Date()));
 users.insert(user);
 System.out.println(user.id); // auto generated id
 
@@ -56,7 +56,7 @@ users.delete().where("id", keenan.id).execute(); // bye bye
 // Raw-er queries
 Select select = database.select("users").where("id", 50, Operator.LESS_OR_EQUAL);
 
-RowIterator iterator = select.executeByRow();
+RowIterator iterator = select.executeIterator();
 while (iterator.hasNext())
     System.out.println(iterator.next());
 
@@ -71,7 +71,7 @@ database.delete("users").where("name", "bill").execute();
 Filter filter = new Filter("id", 10, Operator.LESS).or("id", 25);
 filter = new Filter("age", 18, Operator.GREATER_OR_EQUAL).and(filter);
 
-database.update("users").where(filter).set("coolness", 15);
+database.update("users").where(filter).set("coolness", 15).execute();
 ```
 
 **Disconnect:**
