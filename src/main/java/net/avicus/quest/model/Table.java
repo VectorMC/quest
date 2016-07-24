@@ -160,6 +160,10 @@ public class Table<M extends Model> {
         }
         else if (field.getType() == int.class)
             type = "INT";
+        else if (field.getType() == double.class)
+            type = "DOUBLE";
+        else if (field.getType() == float.class)
+            type = "FLOAT";
         else if (field.getType() == boolean.class)
             type = "TINYINT";
         else if (field.getType() == Date.class)
