@@ -56,7 +56,7 @@ public class MultiInsert {
         sql.append(String.join(", ", fields));
         sql.append(") VALUES ");
         sql.append(String.join(", ", rows));
-        sql.append(");");
+        sql.append(";");
         return sql.toString();
     }
 

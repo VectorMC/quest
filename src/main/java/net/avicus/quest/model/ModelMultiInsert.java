@@ -4,13 +4,14 @@ import net.avicus.quest.query.MultiInsert;
 import net.avicus.quest.query.Row;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class ModelMultiInsert<M extends Model> {
     private final MultiInsert insert;
 
-    public ModelMultiInsert(Table<M> table, List<M> instances) {
+    public ModelMultiInsert(Table<M> table, Collection<M> instances) {
         List<String> columnNames = new ArrayList<>();
         List<Row> rows = new ArrayList<>();
         for (M instance : instances) {

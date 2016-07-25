@@ -38,7 +38,7 @@ public class Table<M extends Model> {
         return new ModelDelete<>(this);
     }
 
-    public ModelMultiInsert<M> multiInsert(List<M> instances) {
+    public ModelMultiInsert<M> multiInsert(Collection<M> instances) {
         return new ModelMultiInsert<>(this, instances);
     }
 
