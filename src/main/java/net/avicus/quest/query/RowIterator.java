@@ -21,17 +21,12 @@ public class RowIterator implements Iterator<Row> {
     @Override
     public boolean hasNext() {
         try {
-            if (this.started) {
-                if (this.current != null)
-                    return true;
-                boolean next = this.resultSet.next();
-                if (next)
-                    this.current = new Row(this.resultSet);
-                return next;
-            }
-            else {
-                return this.resultSet.isBeforeFirst() || this.resultSet.getRow() != 0;
-            }
+            if (this.current != null)
+                return true;
+            boolean next = this.resultSet.next();
+            if (next)
+                this.current = new Row(this.resultSet);
+            return next;
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
