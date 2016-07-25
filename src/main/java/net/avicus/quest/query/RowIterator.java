@@ -11,7 +11,6 @@ import java.util.NoSuchElementException;
 @ToString
 public class RowIterator implements Iterator<Row> {
     private final ResultSet resultSet;
-    private boolean started = false;
     private Row current;
 
     public RowIterator(ResultSet resultSet) {
@@ -34,11 +33,12 @@ public class RowIterator implements Iterator<Row> {
 
     @Override
     public Row next() throws DatabaseException {
-        this.started = true;
-
         if (!hasNext())
             throw new NoSuchElementException();
 
-        return this.current;
+        Row row = this.current;
+        this.current = null;
+
+        return row;
     }
 }
