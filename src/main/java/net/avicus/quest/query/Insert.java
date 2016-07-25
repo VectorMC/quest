@@ -21,7 +21,7 @@ public class Insert {
     }
 
     public Insert set(String field, Object value) {
-        values.put(field, value);
+        this.values.put(field, value);
         return this;
     }
 

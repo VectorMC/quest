@@ -2,18 +2,13 @@ package net.avicus.quest.database;
 
 import lombok.Getter;
 import net.avicus.quest.QuestUtils;
-import net.avicus.quest.query.Insert;
-import net.avicus.quest.query.Select;
-import net.avicus.quest.query.Delete;
-import net.avicus.quest.query.Update;
+import net.avicus.quest.query.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Database {
     @Getter private final DatabaseConfig config;
@@ -38,6 +33,14 @@ public class Database {
 
     public Insert insert(String table) {
         return new Insert(this, table);
+    }
+
+    public MultiInsert multiInsert(String table, Collection<String> columns) {
+        return new MultiInsert(this, table, columns);
+    }
+
+    public MultiInsert multiInsert(String table, String... columns) {
+        return new MultiInsert(this, table, Arrays.asList(columns));
     }
 
     public void createTable(String table, Map<String, String> columns) {

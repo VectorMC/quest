@@ -38,6 +38,10 @@ public class Table<M extends Model> {
         return new ModelDelete<>(this);
     }
 
+    public ModelMultiInsert<M> multiInsert(List<M> instances) {
+        return new ModelMultiInsert<>(this, instances);
+    }
+
     public void create() {
         Map<String, String> columns = new LinkedHashMap<>();
 
