@@ -2,19 +2,24 @@ package net.avicus.quest.database;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatabaseConfig {
     @Getter private final String host;
     @Getter private final String database;
     @Getter private final String username;
     @Getter private final String password;
     @Getter private final boolean reconnectEnabled;
+    @Getter private final boolean unicode;
 
-    private DatabaseConfig(String host, String database, String username, String password, boolean reconnectEnabled) {
+    private DatabaseConfig(String host, String database, String username, String password, boolean reconnectEnabled, boolean unicode) {
         this.host = host;
         this.database = database;
         this.username = username;
         this.password = password;
         this.reconnectEnabled = reconnectEnabled;
+        this.unicode = unicode;
     }
 
     public String getUrl() {
@@ -23,8 +28,11 @@ public class DatabaseConfig {
         url.append("?");
 
         if (this.reconnectEnabled)
-            url.append("autoReconnect=true");
+            url.append("autoReconnect=true&");
 
+        if (this.unicode)
+            url.append("useUnicode=yes&characterEncoding=UTF-8&");
+        
         return url.toString();
     }
 
@@ -38,16 +46,19 @@ public class DatabaseConfig {
         private String username;
         private String password;
         private boolean reconnectEnabled;
+        private boolean unicode;
 
         Builder(String host, String database, String username, String password) {
             this.host = host;
             this.database = database;
             this.username = username;
             this.password = password;
+            this.reconnectEnabled = false;
+            this.unicode = true;
         }
 
         public DatabaseConfig build() {
-            return new DatabaseConfig(this.host, this.database, this.username, this.password, this.reconnectEnabled);
+            return new DatabaseConfig(this.host, this.database, this.username, this.password, this.reconnectEnabled, this.unicode);
         }
 
         public Builder host(String host) {
@@ -72,6 +83,11 @@ public class DatabaseConfig {
 
         public Builder reconnect(boolean reconnectEnabled) {
             this.reconnectEnabled = reconnectEnabled;
+            return this;
+        }
+
+        public Builder unicode(boolean unicode) {
+            this.unicode = unicode;
             return this;
         }
     }
