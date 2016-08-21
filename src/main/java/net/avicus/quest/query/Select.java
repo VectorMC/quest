@@ -82,7 +82,7 @@ public class Select implements Filterable {
     public String build() {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
-        sql.append(this.getColumnString());
+        sql.append(this.buildColumnString());
         sql.append(" FROM ");
         sql.append("`");
         sql.append(this.table);
@@ -128,13 +128,13 @@ public class Select implements Filterable {
         }
     }
 
-    private String getColumnString() {
+    private String buildColumnString() {
         if (this.columns.isEmpty())
             return "*";
         else {
             List<String> columns = new ArrayList<>(this.columns);
             for (int i = 0; i < columns.size(); i++)
-                columns.set(i, "`" + columns.get(i) + "`");
+                columns.set(i, QuestUtils.getField(columns.get(i)));
             return String.join(",", columns);
         }
     }

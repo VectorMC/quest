@@ -32,7 +32,7 @@ public class DatabaseConfig {
 
         if (this.unicode)
             url.append("useUnicode=yes&characterEncoding=UTF-8&");
-        
+
         return url.toString();
     }
 
