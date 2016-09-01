@@ -96,7 +96,7 @@ public class Table<M extends Model> {
             Object value = row.get(name);
 
             if (field.getType() == boolean.class || field.getType() == Boolean.class)
-                value = value != null && (value.equals(1) || value.equals("true"));
+                value = value != null && (value.equals(1) || value.equals("true") || value.equals(true));
 
             if (value == null)
                 continue;
