@@ -27,6 +27,8 @@ public class QuestUtils {
     public static String getField(String field) {
         if (field.contains("SUM"))
             return field;
+        if (field.contains("COUNT"))
+            return field;
         return "`" + field + "`";
     }
 
