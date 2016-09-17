@@ -28,7 +28,7 @@ public class Update implements Filterable {
 
     @Override
     public Update where(String field, Object value) {
-        return this.where(field, value);
+        return this.where(field, value, Operator.EQUALS);
     }
 
     @Override
