@@ -27,18 +27,22 @@ public class DatabaseConnection {
         }
     }
 
-    public void close() {
+    public void close() throws DatabaseException {
         if (this.connection.isPresent()) {
             try {
                 this.connection.get().close();
             } catch (SQLException e) {
-                // ignored
+                throw new DatabaseException(e);
             }
         }
     }
 
-    public boolean getStatus() {
-        return this.connection.isPresent();
+    public boolean isValid() throws DatabaseException {
+        try {
+            return this.connection.isPresent() && this.connection.get().isValid(5);
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
     }
 
     public Connection getConnection() throws DatabaseException {
