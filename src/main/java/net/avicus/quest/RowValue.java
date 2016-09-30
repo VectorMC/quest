@@ -1,4 +1,4 @@
-package net.avicus.quest.select;
+package net.avicus.quest;
 
 import net.avicus.quest.database.DatabaseException;
 

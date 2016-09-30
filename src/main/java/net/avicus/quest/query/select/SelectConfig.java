@@ -1,4 +1,4 @@
-package net.avicus.quest.select;
+package net.avicus.quest.query.select;
 
 import lombok.Builder;
 import lombok.Data;

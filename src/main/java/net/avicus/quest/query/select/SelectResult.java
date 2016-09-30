@@ -1,13 +1,13 @@
-package net.avicus.quest.select;
+package net.avicus.quest.query.select;
 
 import net.avicus.quest.QueryResult;
+import net.avicus.quest.Row;
 import net.avicus.quest.database.DatabaseException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class SelectResult implements QueryResult {
@@ -33,7 +33,7 @@ public class SelectResult implements QueryResult {
         return this.columns.size();
     }
 
-    public Collection<String> getColumnNames() {
+    public List<String> getColumnNames() {
         return this.columns;
     }
 
@@ -45,7 +45,7 @@ public class SelectResult implements QueryResult {
         try {
             this.started = true;
             boolean next = this.set.next();
-            this.current = next ? Row.fromResultSet(this, this.set) : null;
+            this.current = next ? Row.fromSelectResultSet(this, this.set) : null;
             return next;
         } catch (SQLException e) {
             throw new DatabaseException(e);

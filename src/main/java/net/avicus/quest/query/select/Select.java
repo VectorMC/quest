@@ -1,4 +1,4 @@
-package net.avicus.quest.select;
+package net.avicus.quest.query.select;
 
 import net.avicus.quest.Parameter;
 import net.avicus.quest.ParameterizedString;
@@ -178,6 +178,6 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
 
     @Override
     public String toString() {
-        return "Select(" + build().toString() + ")";
+        return "Select(" + build() + ")";
     }
 }

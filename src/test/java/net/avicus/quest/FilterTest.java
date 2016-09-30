@@ -1,15 +1,18 @@
 package net.avicus.quest;
 
-import lombok.Data;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseConfig;
 import net.avicus.quest.filter.Comparison;
 import net.avicus.quest.filter.Filter;
 import net.avicus.quest.parameter.*;
 import net.avicus.quest.parameter.OrderParameter.Direction;
-import net.avicus.quest.select.Row;
-import net.avicus.quest.select.Select;
-import net.avicus.quest.select.SelectResult;
+import net.avicus.quest.query.delete.Delete;
+import net.avicus.quest.query.insert.Insert;
+import net.avicus.quest.query.insert.Insertion;
+import net.avicus.quest.query.select.Select;
+import net.avicus.quest.query.select.SelectConfig;
+import net.avicus.quest.query.select.SelectResult;
+import net.avicus.quest.query.update.Update;
 import org.junit.Test;
 
 import java.util.Date;
@@ -52,15 +55,42 @@ public class FilterTest {
         Select select = new Select(db, new TableParameter("users"));
         select = select.select(new MinParameter("age"));
         select = select.order(new OrderParameter("dob", Direction.DESC));
-        select = select.where("age", new BetweenParameter(0, 18), Comparison.BETWEEN);
         select = select.limit(5);
 
-        SelectResult result = select.execute();
+        SelectResult result = select.execute(SelectConfig.builder().iterable(true).build());
         while (result.next()) {
             Row row = result.getCurrent();
             System.out.println(result.getColumnNames());
             System.out.println(row);
         }
+    }
+
+    @Test
+    public void update() {
+        Update update = new Update(db, new TableParameter("testing", "users"));
+        update = update.set("name", "Keenan");
+        update = update.set("age", 19);
+        update = update.where("name", "Keenan");
+
+        System.out.println(update.execute().getResult());
+    }
+
+    @Test
+    public void delete() {
+        Delete delete = new Delete(db, new TableParameter("testing", "users"));
+        delete = delete.where("id", 5, Comparison.GREATER_THAN_EQUAL);
+
+        System.out.println(delete.execute().getResult());
+    }
+
+    @Test
+    public void insert() {
+        Insert insert = new Insert(db, new TableParameter("users"));
+        insert = insert.add(new Insertion("name", "Adam").with("age", 19).with("nickname", "Adamster"));
+
+        System.out.println(insert.build());
+
+        System.out.println(insert.execute().getGenerated());
     }
 
     @Test
