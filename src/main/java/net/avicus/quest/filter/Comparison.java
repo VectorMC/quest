@@ -8,6 +8,7 @@ public interface Comparison {
     Comparison GREATER_THAN_EQUAL = () -> " >= ";
     Comparison IN = () -> " IN ";
     Comparison LIKE = () -> " LIKE ";
+    Comparison BETWEEN = () -> " BETWEEN ";
 
     String toSql();
 }

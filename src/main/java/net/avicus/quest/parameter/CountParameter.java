@@ -4,20 +4,20 @@ import net.avicus.quest.Parameter;
 
 import java.util.List;
 
-public class SumParameter implements Parameter {
+public class CountParameter implements Parameter {
     private final Parameter expression;
 
-    public SumParameter(Parameter expression) {
+    public CountParameter(Parameter expression) {
         this.expression = expression;
     }
 
-    public SumParameter(String column) {
+    public CountParameter(String column) {
         this(new ColumnParameter(column));
     }
 
     @Override
     public String getKey() {
-        return "SUM(" + this.expression.getKey() + ")";
+        return "COUNT(" + this.expression.getKey() + ")";
     }
 
     @Override
@@ -27,6 +27,6 @@ public class SumParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "SumParameter(expression=" + this.expression + ")";
+        return "CountParameter(expression=" + this.expression + ")";
     }
 }

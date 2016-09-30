@@ -7,7 +7,9 @@ import net.avicus.quest.filter.Comparison;
 import net.avicus.quest.filter.Filter;
 import net.avicus.quest.parameter.*;
 import net.avicus.quest.parameter.OrderParameter.Direction;
+import net.avicus.quest.select.Row;
 import net.avicus.quest.select.Select;
+import net.avicus.quest.select.SelectResult;
 import org.junit.Test;
 
 import java.util.Date;
@@ -47,13 +49,18 @@ public class FilterTest {
 
     @Test
     public void customSelect() {
-
         Select select = new Select(db, new TableParameter("users"));
-        select = select.select(new WildcardParameter(), new CustomParameter("@curr := @curr + 1 AS rank"));
-        select = select.order(new OrderParameter("date", Direction.DESC));
+        select = select.select(new MinParameter("age"));
+        select = select.order(new OrderParameter("dob", Direction.DESC));
+        select = select.where("age", new BetweenParameter(0, 18), Comparison.BETWEEN);
         select = select.limit(5);
 
-        System.out.println(select.execute());
+        SelectResult result = select.execute();
+        while (result.next()) {
+            Row row = result.getCurrent();
+            System.out.println(result.getColumnNames());
+            System.out.println(row);
+        }
     }
 
     @Test

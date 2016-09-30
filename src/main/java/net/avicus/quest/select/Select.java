@@ -3,7 +3,8 @@ package net.avicus.quest.select;
 import net.avicus.quest.Parameter;
 import net.avicus.quest.ParameterizedString;
 import net.avicus.quest.Query;
-import net.avicus.quest.Filterable;
+import net.avicus.quest.database.DatabaseException;
+import net.avicus.quest.filter.Filterable;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.filter.Filter;
 import net.avicus.quest.parameter.*;
@@ -162,19 +163,21 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
     }
 
     @Override
-    public SelectResult execute(Optional<SelectConfig> config) {
-        ParameterizedString sql = build();
+    public SelectResult execute(Optional<SelectConfig> config) throws DatabaseException {
+        // The query
+        ParameterizedString query = build();
 
-        PreparedStatement statement = this.database.createQueryStatement(sql.getSql(), false);
+        // Create statement
+        PreparedStatement statement = config.orElse(SelectConfig.DEFAULT).createStatement(this.database, query.getSql());
 
-        // Configuration
-        if (config.isPresent()) {
-            config.get().apply(statement);
-        }
+        // Add variables (?, ?)
+        query.apply(statement, 1);
 
-        sql.apply(statement, 1);
+        return SelectResult.execute(statement);
+    }
 
-        System.out.println(statement.toString());
-        return null;
+    @Override
+    public String toString() {
+        return "Select(" + build().toString() + ")";
     }
 }

@@ -10,6 +10,6 @@ public class DatabaseException extends RuntimeException {
     }
 
     public DatabaseException(Throwable cause) {
-        super(cause);
+        this(cause.getMessage(), cause);
     }
 }

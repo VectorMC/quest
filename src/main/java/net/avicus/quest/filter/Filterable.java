@@ -1,5 +1,7 @@
-package net.avicus.quest;
+package net.avicus.quest.filter;
 
+import net.avicus.quest.Parameter;
+import net.avicus.quest.Query;
 import net.avicus.quest.filter.Comparison;
 import net.avicus.quest.filter.Filter;
 import net.avicus.quest.parameter.ColumnParameter;
