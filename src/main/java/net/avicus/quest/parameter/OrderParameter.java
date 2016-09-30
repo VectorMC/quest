@@ -13,7 +13,7 @@ public class OrderParameter implements Parameter {
     }
 
     public OrderParameter(String column, Direction direction) {
-        this(new ColumnParameter(column), direction);
+        this(new FieldParameter(column), direction);
     }
 
     public OrderParameter(Parameter parameter) {
@@ -30,9 +30,8 @@ public class OrderParameter implements Parameter {
         return this.parameter.getKey() + " " + this.direction.name();
     }
 
-    @Override
-    public List<Object> getValues() {
-        return this.parameter.getValues();
+    public List<Object> getObjects() {
+        return this.parameter.getObjects();
     }
 
     public enum Direction {

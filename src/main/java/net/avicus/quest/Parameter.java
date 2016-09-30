@@ -5,5 +5,5 @@ import java.util.List;
 public interface Parameter {
     String getKey();
 
-    List<Object> getValues();
+    List<Object> getObjects();
 }

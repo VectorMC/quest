@@ -12,7 +12,7 @@ public class SumParameter implements Parameter {
     }
 
     public SumParameter(String column) {
-        this(new ColumnParameter(column));
+        this(new FieldParameter(column));
     }
 
     @Override
@@ -20,9 +20,8 @@ public class SumParameter implements Parameter {
         return "SUM(" + this.expression.getKey() + ")";
     }
 
-    @Override
-    public List<Object> getValues() {
-        return this.expression.getValues();
+    public List<Object> getObjects() {
+        return this.expression.getObjects();
     }
 
     @Override

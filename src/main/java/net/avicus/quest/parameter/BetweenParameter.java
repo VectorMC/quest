@@ -14,8 +14,8 @@ public class BetweenParameter implements Parameter {
         this.low = low;
         this.high = high;
         this.values = new ArrayList<>();
-        this.values.addAll(low.getValues());
-        this.values.addAll(high.getValues());
+        this.values.addAll(low.getObjects());
+        this.values.addAll(high.getObjects());
     }
 
     public BetweenParameter(int low, int high) {
@@ -27,8 +27,7 @@ public class BetweenParameter implements Parameter {
         return "? AND ?";
     }
 
-    @Override
-    public List<Object> getValues() {
+    public List<Object> getObjects() {
         return this.values;
     }
 

@@ -26,7 +26,7 @@ public class ParameterizedString {
         int next = startingParameter;
 
         for (Parameter parameter : this.parameters) {
-            for (Object value : parameter.getValues()) {
+            for (Object value : parameter.getObjects()) {
                 try {
                     statement.setObject(next, value);
                 } catch (SQLException e) {

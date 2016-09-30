@@ -5,22 +5,17 @@ import net.avicus.quest.ParameterizedString;
 import net.avicus.quest.Query;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
-import net.avicus.quest.filter.Filterable;
-import net.avicus.quest.parameter.ColumnParameter;
-import net.avicus.quest.parameter.ObjectParameter;
-import net.avicus.quest.parameter.OrderParameter;
-import net.avicus.quest.parameter.TableParameter;
+import net.avicus.quest.parameter.FieldParameter;
 
 import java.sql.PreparedStatement;
 import java.util.*;
-import java.util.Map.Entry;
 
 public class Insert implements Query<InsertResult, InsertConfig> {
     private final Database database;
-    private final TableParameter table;
+    private final FieldParameter table;
     private final List<Insertion> insertions;
 
-    public Insert(Database database, TableParameter table) {
+    public Insert(Database database, FieldParameter table) {
         this.database = database;
         this.table = table;
         this.insertions = new ArrayList<>();

@@ -11,8 +11,7 @@ public class WildcardParameter implements Parameter {
         return "*";
     }
 
-    @Override
-    public List<Object> getValues() {
+    public List<Object> getObjects() {
         return Collections.emptyList();
     }
 

@@ -17,13 +17,12 @@ public class ObjectParameter implements Parameter {
         return "?";
     }
 
-    @Override
-    public List<Object> getValues() {
+    public List<Object> getObjects() {
         return Collections.singletonList(this.value);
     }
 
     @Override
     public String toString() {
-        return "ObjectParameter(key=" + getKey() + ", values=" + getValues() + ")";
+        return "ObjectParameter(key=" + getKey() + ", values=" + getObjects() + ")";
     }
 }

@@ -14,14 +14,15 @@ import java.util.*;
 
 public class Select implements Query<SelectResult, SelectConfig>, Filterable<Select> {
     private final Database database;
-    private final TableParameter table;
+    private final FieldParameter table;
     private Filter filter;
     private List<Parameter> columns;
     private Parameter offset;
     private Parameter limit;
     private List<OrderParameter> order;
+    private CustomParameter join;
 
-    public Select(Database database, TableParameter table) {
+    public Select(Database database, FieldParameter table) {
         this.database = database;
         this.table = table;
     }
@@ -33,6 +34,7 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
         copy.offset = this.offset;
         copy.limit = this.limit;
         copy.order = this.order;
+        copy.join = this.join;
         return copy;
     }
 
@@ -68,7 +70,7 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
     public Select select(String... columns) {
         List<Parameter> parameters = new ArrayList<>();
         for (String column : columns) {
-            parameters.add(new ColumnParameter(column));
+            parameters.add(new FieldParameter(column));
         }
         return select(parameters);
     }
@@ -107,6 +109,20 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
         return select;
     }
 
+    public Select join(CustomParameter join) {
+        Select select = duplicate();
+        select.join = join;
+        return select;
+    }
+
+    public Select join(String sql) {
+        return join(new CustomParameter(sql));
+    }
+
+    public Select join(String sql, Parameter... params) {
+        return join(new CustomParameter(sql, params));
+    }
+
     public ParameterizedString build() {
         StringBuilder sb = new StringBuilder();
         List<Parameter> parameters = new ArrayList<>();
@@ -131,6 +147,12 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
 
         sb.append(this.table.getKey());
         parameters.add(this.table);
+
+        if (this.join != null) {
+            sb.append(" ");
+            sb.append(this.join.getKey());
+            parameters.add(this.join);
+        }
 
         if (this.filter != null) {
             sb.append(" WHERE ");

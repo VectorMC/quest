@@ -12,7 +12,7 @@ public class AvgParameter implements Parameter {
     }
 
     public AvgParameter(String column) {
-        this(new ColumnParameter(column));
+        this(new FieldParameter(column));
     }
 
     @Override
@@ -20,9 +20,8 @@ public class AvgParameter implements Parameter {
         return "AVG(" + this.expression.getKey() + ")";
     }
 
-    @Override
-    public List<Object> getValues() {
-        return this.expression.getValues();
+    public List<Object> getObjects() {
+        return this.expression.getObjects();
     }
 
     @Override

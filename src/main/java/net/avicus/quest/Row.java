@@ -65,14 +65,17 @@ public class Row {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("Row(");
         for (int i = 0; i < this.columnNames.size(); i++) {
             sb.append(this.columnNames.get(i));
-            sb.append(": ");
+            sb.append("[").append(i + 1).append("]");
+            sb.append("=");
             sb.append(this.values.get(i));
             if (i != this.columnNames.size() - 1) {
-                sb.append(",");
+                sb.append(", ");
             }
         }
+        sb.append(")");
         return sb.toString();
     }
 }

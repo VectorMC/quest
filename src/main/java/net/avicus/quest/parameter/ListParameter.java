@@ -27,17 +27,16 @@ public class ListParameter implements Parameter {
         return sb.toString();
     }
 
-    @Override
-    public List<Object> getValues() {
+    public List<Object> getObjects() {
         List<Object> values = new ArrayList<>();
         for (Parameter parameter : this.parameters) {
-            values.addAll(parameter.getValues());
+            values.addAll(parameter.getObjects());
         }
         return values;
     }
 
     @Override
     public String toString() {
-        return "ListParameter(key=" + getKey() + ", values=" + getValues() + ")";
+        return "ListParameter(key=" + getKey() + ", values=" + getObjects() + ")";
     }
 }

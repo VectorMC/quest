@@ -11,8 +11,7 @@ public class NullParameter implements Parameter {
         return "NULL";
     }
 
-    @Override
-    public List<Object> getValues() {
+    public List<Object> getObjects() {
         return Collections.emptyList();
     }
 

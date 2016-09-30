@@ -2,20 +2,21 @@ package net.avicus.quest.parameter;
 
 import net.avicus.quest.Parameter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CustomParameter implements Parameter {
     private final String key;
-    private final List<Object> values;
+    private final List<Parameter> params;
 
-    public CustomParameter(String key, List<Object> values) {
+    public CustomParameter(String key, List<Parameter> params) {
         this.key = key;
-        this.values = values;
+        this.params = params;
     }
 
-    public CustomParameter(String key, Object... values) {
-        this(key, Arrays.asList(values));
+    public CustomParameter(String key, Parameter... params) {
+        this(key, Arrays.asList(params));
     }
 
     @Override
@@ -23,8 +24,11 @@ public class CustomParameter implements Parameter {
         return this.key;
     }
 
-    @Override
-    public List<Object> getValues() {
-        return this.values;
+    public List<Object> getObjects() {
+        List<Object> objects = new ArrayList<>();
+        for (Parameter param : this.params) {
+            objects.addAll(param.getObjects());
+        }
+        return objects;
     }
 }

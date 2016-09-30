@@ -12,7 +12,7 @@ public class MaxParameter implements Parameter {
     }
 
     public MaxParameter(String column) {
-        this(new ColumnParameter(column));
+        this(new FieldParameter(column));
     }
 
     @Override
@@ -20,9 +20,8 @@ public class MaxParameter implements Parameter {
         return "MAX(" + this.expression.getKey() + ")";
     }
 
-    @Override
-    public List<Object> getValues() {
-        return this.expression.getValues();
+    public List<Object> getObjects() {
+        return this.expression.getObjects();
     }
 
     @Override

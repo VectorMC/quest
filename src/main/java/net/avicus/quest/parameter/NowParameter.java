@@ -11,8 +11,7 @@ public class NowParameter implements Parameter {
         return "NOW()";
     }
 
-    @Override
-    public List<Object> getValues() {
+    public List<Object> getObjects() {
         return Collections.emptyList();
     }
 

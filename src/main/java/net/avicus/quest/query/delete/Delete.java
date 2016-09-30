@@ -9,19 +9,19 @@ import net.avicus.quest.filter.Filter;
 import net.avicus.quest.filter.Filterable;
 import net.avicus.quest.parameter.ObjectParameter;
 import net.avicus.quest.parameter.OrderParameter;
-import net.avicus.quest.parameter.TableParameter;
+import net.avicus.quest.parameter.FieldParameter;
 
 import java.sql.PreparedStatement;
 import java.util.*;
 
 public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Delete> {
     private final Database database;
-    private final TableParameter table;
+    private final FieldParameter table;
     private Filter filter;
     private Parameter limit;
     private List<OrderParameter> order;
 
-    public Delete(Database database, TableParameter table) {
+    public Delete(Database database, FieldParameter table) {
         this.database = database;
         this.table = table;
     }

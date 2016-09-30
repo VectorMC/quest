@@ -38,7 +38,7 @@ public class FilterTest {
 
     @Test
     public void select() {
-        Select select = new Select(db, new TableParameter("users"));
+        Select select = new Select(db, new FieldParameter("users"));
         select = select.where("id", 5);
         select = select.where("key", 50, Comparison.LESS_THAN);
         select = select.where("dob", new Date(), Comparison.GREATER_THAN_EQUAL);
@@ -52,7 +52,7 @@ public class FilterTest {
 
     @Test
     public void customSelect() {
-        Select select = new Select(db, new TableParameter("users"));
+        Select select = new Select(db, new FieldParameter("users"));
         select = select.select(new MinParameter("age"));
         select = select.order(new OrderParameter("dob", Direction.DESC));
         select = select.limit(5);
@@ -67,7 +67,7 @@ public class FilterTest {
 
     @Test
     public void update() {
-        Update update = new Update(db, new TableParameter("testing", "users"));
+        Update update = new Update(db, new FieldParameter("testing", "users"));
         update = update.set("name", "Keenan");
         update = update.set("age", 19);
         update = update.where("name", "Keenan");
@@ -77,7 +77,7 @@ public class FilterTest {
 
     @Test
     public void delete() {
-        Delete delete = new Delete(db, new TableParameter("testing", "users"));
+        Delete delete = new Delete(db, new FieldParameter("testing", "users"));
         delete = delete.where("id", 5, Comparison.GREATER_THAN_EQUAL);
 
         System.out.println(delete.execute().getResult());
@@ -85,7 +85,7 @@ public class FilterTest {
 
     @Test
     public void insert() {
-        Insert insert = new Insert(db, new TableParameter("users"));
+        Insert insert = new Insert(db, new FieldParameter("users"));
         insert = insert.add(new Insertion("name", "Adam").with("age", 19).with("nickname", "Adamster"));
 
         System.out.println(insert.build());
@@ -94,9 +94,17 @@ public class FilterTest {
     }
 
     @Test
-    public void sum() {
-        ColumnParameter amount = new ColumnParameter("amount");
-        SumParameter sum = new SumParameter(amount);
-        System.out.println(sum.toString());
+    public void join() {
+        Select select = new Select(db, new FieldParameter("users"));
+        select = select.select(new FieldParameter("users", "id"), new FieldParameter("purchases", "product_name"), new FieldParameter("purchases", "amount"));
+        select = select.join("JOIN `purchases` ON `users`.`id`=`purchases`.`user_id`");
+
+        System.out.println(select.build());
+        for (Row row : select.execute().toList()) {
+            System.out.print(row.getValue(1));
+            System.out.print(row.getValue(2));
+            System.out.print(row.getValue(3));
+            System.out.println();
+        }
     }
 }

@@ -9,7 +9,7 @@ import net.avicus.quest.filter.Filter;
 import net.avicus.quest.filter.Filterable;
 import net.avicus.quest.parameter.ObjectParameter;
 import net.avicus.quest.parameter.OrderParameter;
-import net.avicus.quest.parameter.TableParameter;
+import net.avicus.quest.parameter.FieldParameter;
 
 import java.sql.PreparedStatement;
 import java.util.*;
@@ -17,13 +17,13 @@ import java.util.Map.Entry;
 
 public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Update> {
     private final Database database;
-    private final TableParameter table;
+    private final FieldParameter table;
     private final Map<String, Parameter> changes;
     private Filter filter;
     private Parameter limit;
     private List<OrderParameter> order;
 
-    public Update(Database database, TableParameter table) {
+    public Update(Database database, FieldParameter table) {
         this.database = database;
         this.table = table;
         this.changes = new HashMap<>();
