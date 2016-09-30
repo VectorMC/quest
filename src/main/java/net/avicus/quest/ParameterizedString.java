@@ -1,5 +1,9 @@
 package net.avicus.quest;
 
+import net.avicus.quest.database.DatabaseException;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,6 +16,29 @@ public class ParameterizedString {
         this.parameters = parameters;
     }
 
+    /**
+     * Applies parameter objects to a statement, given the starting parameter number.
+     * @param statement
+     * @param startingParameter
+     * @return The next parameter number.
+     */
+    public int apply(PreparedStatement statement, int startingParameter) {
+        int next = startingParameter;
+
+        for (Parameter parameter : this.parameters) {
+            for (Object value : parameter.getValues()) {
+                try {
+                    statement.setObject(next, value);
+                } catch (SQLException e) {
+                    throw new DatabaseException(e);
+                }
+                next++;
+            }
+        }
+
+        return next;
+    }
+
     public String getSql() {
         return this.sql;
     }
@@ -20,6 +47,7 @@ public class ParameterizedString {
         return this.parameters;
     }
 
+    @Override
     public String toString() {
         return "ParameterizedString(sql=" + this.sql + ", parameters=" + this.parameters + ")";
     }
