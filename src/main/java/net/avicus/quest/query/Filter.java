@@ -36,7 +36,7 @@ public class Filter implements Filterable {
 
     @Override
     public Filter where(String field, Object value) {
-        return this.where(field, value);
+        return this.where(field, value, Operator.EQUALS);
     }
 
     @Override
