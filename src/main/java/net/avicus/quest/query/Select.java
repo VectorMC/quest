@@ -33,8 +33,10 @@ public class Select implements Filterable {
 
     public Select(Select select) {
         this(select.database, select.table);
-        this.columns = select.columns;
-        this.filter = select.filter;
+        this.columns = new ArrayList<>(select.columns);
+        this.filter = Optional.empty();
+        if (select.filter.isPresent())
+            this.filter = Optional.of(new Filter(select.filter.get()));
         this.order = select.order;
         this.limit = select.limit;
     }

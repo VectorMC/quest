@@ -32,8 +32,8 @@ public class Filter implements Filterable {
 
     public Filter(Filter filter) {
         this();
-        this.ors = filter.ors;
-        this.ands = filter.ands;
+        this.ors = new ArrayList<>(filter.ors);
+        this.ands = new ArrayList<>(filter.ands);
         this.field = filter.field;
         this.value = filter.value;
         this.operator = filter.operator;

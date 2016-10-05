@@ -21,7 +21,9 @@ public class Delete implements Filterable {
 
     public Delete(Delete delete) {
         this(delete.database, delete.table);
-        this.filter = delete.filter;
+        this.filter = Optional.empty();
+        if (delete.filter.isPresent())
+            this.filter = Optional.of(new Filter(delete.filter.get()));
     }
 
     @Override

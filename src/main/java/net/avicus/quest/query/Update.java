@@ -23,8 +23,10 @@ public class Update implements Filterable {
 
     public Update(Update update) {
         this(update.database, update.table);
-        this.values = update.values;
-        this.filter = update.filter;
+        this.values = new HashMap<>(update.values);
+        this.filter = Optional.empty();
+        if (update.filter.isPresent())
+            this.filter = Optional.of(new Filter(update.filter.get()));
     }
 
     public Update set(String field, Object value) {
