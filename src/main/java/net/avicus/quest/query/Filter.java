@@ -30,7 +30,7 @@ public class Filter implements Filterable {
         this.operator = Optional.of(operator);
     }
 
-    private Filter(Filter filter) {
+    public Filter(Filter filter) {
         this();
         this.ors = filter.ors;
         this.ands = filter.ands;
