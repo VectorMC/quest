@@ -19,6 +19,11 @@ public class Delete implements Filterable {
         this.filter = Optional.empty();
     }
 
+    public Delete(Delete delete) {
+        this(delete.database, delete.table);
+        this.filter = delete.filter;
+    }
+
     @Override
     public Delete where(String field, Object value) {
         return this.where(field, value);

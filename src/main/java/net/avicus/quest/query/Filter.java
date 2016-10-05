@@ -9,8 +9,8 @@ import java.util.Optional;
 
 @ToString
 public class Filter implements Filterable {
-    private final List<Filter> ands;
-    private final List<Filter> ors;
+    private List<Filter> ands;
+    private List<Filter> ors;
 
     private Optional<String> field;
     private Optional<Object> value;
@@ -28,6 +28,15 @@ public class Filter implements Filterable {
         this.field = Optional.of(field);
         this.value = Optional.ofNullable(value);
         this.operator = Optional.of(operator);
+    }
+
+    private Filter(Filter filter) {
+        this();
+        this.ors = filter.ors;
+        this.ands = filter.ands;
+        this.field = filter.field;
+        this.value = filter.value;
+        this.operator = filter.operator;
     }
 
     public Filter(String field, Object value) {

@@ -11,7 +11,7 @@ import java.util.*;
 public class Update implements Filterable {
     private final Database database;
     private final String table;
-    private final Map<String, Object> values;
+    private Map<String, Object> values;
     private Optional<Filter> filter;
 
     public Update(Database database, String table) {
@@ -19,6 +19,12 @@ public class Update implements Filterable {
         this.table = table;
         this.values = new LinkedHashMap<>();
         this.filter = Optional.empty();
+    }
+
+    public Update(Update update) {
+        this(update.database, update.table);
+        this.values = update.values;
+        this.filter = update.filter;
     }
 
     public Update set(String field, Object value) {

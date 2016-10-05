@@ -17,7 +17,7 @@ import java.util.Optional;
 public class Select implements Filterable {
     @Getter private final Database database;
     @Getter private final String table;
-    private final List<String> columns;
+    private List<String> columns;
     private Optional<Filter> filter;
     private Optional<String> order;
     private Optional<String> limit;
@@ -29,6 +29,14 @@ public class Select implements Filterable {
         this.filter = Optional.empty();
         this.order = Optional.empty();
         this.limit = Optional.empty();
+    }
+
+    public Select(Select select) {
+        this(select.database, select.table);
+        this.columns = select.columns;
+        this.filter = select.filter;
+        this.order = select.order;
+        this.limit = select.limit;
     }
 
     @Override
