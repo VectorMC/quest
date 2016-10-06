@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class SelectResult implements QueryResult {
     private final ResultSet set;
@@ -59,9 +61,16 @@ public class SelectResult implements QueryResult {
         return this.current;
     }
 
+    public Optional<Row> findFirst() {
+        checkNotStarted();
+        if (next()) {
+            return Optional.of(this.current);
+        }
+        return Optional.empty();
+    }
+
     public List<Row> toList() {
-        if (isStarted())
-            throw new DatabaseException("Select was already started.");
+        checkNotStarted();
 
         List<Row> rows = new ArrayList<>();
         while (next()) {
@@ -69,6 +78,31 @@ public class SelectResult implements QueryResult {
         }
 
         return rows;
+    }
+
+    public <U> U getCurrentMapped(Function<Row, ? extends U> mapper) {
+        return mapper.apply(getCurrent());
+    }
+
+    public <U> Optional<U> findFirstMapped(Function<Row, ? extends U> mapper) {
+        return findFirst().map(mapper);
+    }
+
+    public <U> List<U> toListMapped(Function<Row, ? extends U> mapper) {
+        checkNotStarted();
+
+        List<U> rows = new ArrayList<>();
+        while (next()) {
+            rows.add(getCurrentMapped(mapper));
+        }
+
+        return rows;
+    }
+
+    private void checkNotStarted() {
+        if (isStarted()) {
+            throw new DatabaseException("Select was already started.");
+        }
     }
 
     public static SelectResult execute(PreparedStatement statement) throws DatabaseException {

@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A row from a result set. ResultSet's are silly because they
@@ -21,10 +23,32 @@ public class Row {
         this.values = values;
     }
 
-    public RowValue getValue(int column) throws DatabaseException {
-        int index = column - 1;
+    public boolean hasColumn(int number) {
+        int index = number - 1;
+        return index >= 0 && index < this.values.size();
+    }
+
+    public boolean hasColumn(String column) {
+        int number = this.columnNames.indexOf(column);
+        return hasColumn(number);
+    }
+
+    public String getColumnName(int number) {
+        int index = number - 1;
+        if (index < 0 || index >= this.columnNames.size()) {
+            throw new DatabaseException("Invalid column number: " + number + ".");
+        }
+        return this.columnNames.get(index);
+    }
+
+    public int getColumnCount() {
+        return this.columnNames.size();
+    }
+
+    public RowValue getValue(int number) throws DatabaseException {
+        int index = number - 1;
         if (index < 0 || index >= this.values.size()) {
-            throw new DatabaseException("Invalid column number: " + column + ".");
+            throw new DatabaseException("Invalid column number: " + number + ".");
         }
         return this.values.get(index);
     }
@@ -60,6 +84,15 @@ public class Row {
         }
 
         return new Row(columnNames, values);
+    }
+
+    public static Row fromRowValues(Map<String, RowValue> data) {
+        return new Row(new ArrayList<>(data.keySet()), new ArrayList<>(data.values()));
+    }
+
+    public static Row fromObjects(Map<String, Object> data) {
+        List<RowValue> values = data.values().stream().map(RowValue::new).collect(Collectors.toList());
+        return new Row(new ArrayList<>(data.keySet()), values);
     }
 
     @Override

@@ -3,10 +3,10 @@ package net.avicus.quest.query.select;
 import net.avicus.quest.Parameter;
 import net.avicus.quest.ParameterizedString;
 import net.avicus.quest.Query;
-import net.avicus.quest.database.DatabaseException;
-import net.avicus.quest.filter.Filterable;
 import net.avicus.quest.database.Database;
+import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.filter.Filter;
+import net.avicus.quest.filter.Filterable;
 import net.avicus.quest.parameter.*;
 
 import java.sql.PreparedStatement;

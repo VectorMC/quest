@@ -7,6 +7,7 @@ import net.avicus.quest.database.DatabaseException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Consumer;
 
 public class InsertResult implements QueryResult {
     private final int result;
@@ -23,6 +24,10 @@ public class InsertResult implements QueryResult {
 
     public Row getGenerated() {
         return this.generated;
+    }
+
+    public void applyGenerated(Consumer<Row> consumer) {
+        consumer.accept(getGenerated());
     }
 
     public static InsertResult execute(PreparedStatement statement) throws DatabaseException {

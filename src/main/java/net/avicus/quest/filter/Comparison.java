@@ -10,5 +10,9 @@ public interface Comparison {
     Comparison LIKE = () -> " LIKE ";
     Comparison BETWEEN = () -> " BETWEEN ";
 
+    /**
+     * The SQL representation of the comparison method.
+     * @return
+     */
     String toSql();
 }

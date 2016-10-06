@@ -14,6 +14,9 @@ public class ListParameter implements Parameter {
     private final List<Parameter> parameters;
 
     public ListParameter(List<Parameter> parameters) {
+        if (parameters.isEmpty()) {
+            throw new IllegalArgumentException("List parameter must have at least one parameter.");
+        }
         this.parameters = parameters;
     }
 

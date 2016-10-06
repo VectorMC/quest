@@ -5,7 +5,6 @@ import net.avicus.quest.Parameter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class FieldParameter implements Parameter {
     private final List<String> fields;
@@ -22,7 +21,8 @@ public class FieldParameter implements Parameter {
     public String getKey() {
         StringBuilder sb = new StringBuilder();
         for (String field : this.fields) {
-            sb.append("`").append(field).append("`");
+            // Backticks or double quotes are NOT used intentionally, so as to support SQL standard AND MySQL
+            sb.append(field);
             if (!this.fields.get(this.fields.size() - 1).equals(field)) {
                 sb.append(".");
             }
