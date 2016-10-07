@@ -1,10 +1,19 @@
 package net.avicus.quest.database;
 
-import net.avicus.quest.parameter.FieldParameter;
-import net.avicus.quest.query.insert.Insert;
-import net.avicus.quest.query.select.Select;
 import net.avicus.quest.database.url.DatabaseUrl;
+import net.avicus.quest.parameter.FieldParameter;
+import net.avicus.quest.query.delete.Delete;
+import net.avicus.quest.query.delete.DeleteConfig;
+import net.avicus.quest.query.delete.DeleteResult;
+import net.avicus.quest.query.insert.Insert;
+import net.avicus.quest.query.insert.InsertConfig;
+import net.avicus.quest.query.insert.InsertResult;
+import net.avicus.quest.query.select.Select;
+import net.avicus.quest.query.select.SelectConfig;
+import net.avicus.quest.query.select.SelectResult;
 import net.avicus.quest.query.update.Update;
+import net.avicus.quest.query.update.UpdateConfig;
+import net.avicus.quest.query.update.UpdateResult;
 
 import java.sql.*;
 import java.util.Optional;
@@ -33,12 +42,52 @@ public class Database {
         return Optional.ofNullable(this.connection);
     }
 
+    public Delete delete(FieldParameter table) {
+        return new Delete(this, table);
+    }
+
+    public Delete delete(String table) {
+        return delete(new FieldParameter(table));
+    }
+
+    public DeleteResult rawDelete(String sql, Object... data) {
+        return rawDelete(sql, DeleteConfig.DEFAULT, data);
+    }
+
+    public DeleteResult rawDelete(String sql, DeleteConfig config, Object... data) {
+        PreparedStatement statement = config.createStatement(this, sql);
+        for (int i = 0; i < data.length; i++) {
+            try {
+                statement.setObject(i + 1, data[i]);
+            } catch (SQLException e) {
+                throw new DatabaseException(e);
+            }
+        }
+        return DeleteResult.execute(statement);
+    }
+
     public Insert insert(FieldParameter table) {
         return new Insert(this, table);
     }
 
     public Insert insert(String table) {
         return insert(new FieldParameter(table));
+    }
+
+    public InsertResult rawInsert(String sql, Object... data) {
+        return rawInsert(sql, InsertConfig.DEFAULT, data);
+    }
+
+    public InsertResult rawInsert(String sql, InsertConfig config, Object... data) {
+        PreparedStatement statement = config.createStatement(this, sql);
+        for (int i = 0; i < data.length; i++) {
+            try {
+                statement.setObject(i + 1, data[i]);
+            } catch (SQLException e) {
+                throw new DatabaseException(e);
+            }
+        }
+        return InsertResult.execute(statement);
     }
 
     public Update update(FieldParameter table) {
@@ -49,12 +98,44 @@ public class Database {
         return new Update(this, new FieldParameter(table));
     }
 
+    public UpdateResult rawUpdate(String sql, Object... data) {
+        return rawUpdate(sql, UpdateConfig.DEFAULT, data);
+    }
+
+    public UpdateResult rawUpdate(String sql, UpdateConfig config, Object... data) {
+        PreparedStatement statement = config.createStatement(this, sql);
+        for (int i = 0; i < data.length; i++) {
+            try {
+                statement.setObject(i + 1, data[i]);
+            } catch (SQLException e) {
+                throw new DatabaseException(e);
+            }
+        }
+        return UpdateResult.execute(statement);
+    }
+
     public Select select(FieldParameter table) {
         return new Select(this, table);
     }
 
     public Select select(String table) {
         return select(new FieldParameter(table));
+    }
+
+    public SelectResult rawSelect(String sql, SelectConfig config, Object... data) {
+        PreparedStatement statement = config.createStatement(this, sql);
+        for (int i = 0; i < data.length; i++) {
+            try {
+                statement.setObject(i + 1, data[i]);
+            } catch (SQLException e) {
+                throw new DatabaseException(e);
+            }
+        }
+        return SelectResult.execute(statement);
+    }
+
+    public SelectResult rawSelect(String sql, Object... data) {
+        return rawSelect(sql, SelectConfig.DEFAULT, data);
     }
 
     public PreparedStatement createUpdateStatement(String sql) {
