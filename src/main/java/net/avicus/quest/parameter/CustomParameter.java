@@ -5,6 +5,7 @@ import net.avicus.quest.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomParameter implements Parameter {
     private final String key;
@@ -17,6 +18,10 @@ public class CustomParameter implements Parameter {
 
     public CustomParameter(String key, Parameter... params) {
         this(key, Arrays.asList(params));
+    }
+
+    public CustomParameter(String key, Object... objects) {
+        this(key, Arrays.asList(objects).stream().map(ObjectParameter::new).collect(Collectors.toList()));
     }
 
     @Override

@@ -8,7 +8,7 @@ import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.query.Filter;
 import net.avicus.quest.query.Filterable;
 import net.avicus.quest.parameter.ObjectParameter;
-import net.avicus.quest.parameter.OrderParameter;
+import net.avicus.quest.parameter.DirectionalParameter;
 import net.avicus.quest.parameter.FieldParameter;
 
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Del
     private final FieldParameter table;
     private Filter filter;
     private Parameter limit;
-    private List<OrderParameter> order;
+    private List<DirectionalParameter> order;
 
     public Delete(Database database, FieldParameter table) {
         this.database = database;
@@ -67,11 +67,11 @@ public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Del
         return update;
     }
 
-    public Delete order(OrderParameter... order) {
+    public Delete order(DirectionalParameter... order) {
         return order(Arrays.asList(order));
     }
 
-    public Delete order(List<OrderParameter> order) {
+    public Delete order(List<DirectionalParameter> order) {
         Delete update = duplicate();
         update.order = order;
         return update;
@@ -95,7 +95,7 @@ public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Del
 
         if (this.order != null) {
             sb.append(" ORDER BY ");
-            for (OrderParameter order : this.order) {
+            for (DirectionalParameter order : this.order) {
                 sb.append(order.getKey());
                 parameters.add(order);
             }

@@ -4,23 +4,23 @@ import net.avicus.quest.Parameter;
 
 import java.util.List;
 
-public class OrderParameter implements Parameter {
+public class DirectionalParameter implements Parameter {
     private final Parameter parameter;
     private final Direction direction;
 
-    public OrderParameter(String column) {
+    public DirectionalParameter(String column) {
         this(column, Direction.ASC);
     }
 
-    public OrderParameter(String column, Direction direction) {
+    public DirectionalParameter(String column, Direction direction) {
         this(new FieldParameter(column), direction);
     }
 
-    public OrderParameter(Parameter parameter) {
+    public DirectionalParameter(Parameter parameter) {
         this(parameter, Direction.ASC);
     }
 
-    public OrderParameter(Parameter parameter, Direction direction) {
+    public DirectionalParameter(Parameter parameter, Direction direction) {
         this.parameter = parameter;
         this.direction = direction;
     }

@@ -19,7 +19,8 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
     private List<Parameter> columns;
     private Parameter offset;
     private Parameter limit;
-    private List<OrderParameter> order;
+    private Parameter groupBy;
+    private List<Parameter> order;
     private CustomParameter join;
 
     public Select(Database database, FieldParameter table) {
@@ -33,6 +34,7 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
         copy.columns = this.columns == null ? null : new ArrayList<>(this.columns);
         copy.offset = this.offset;
         copy.limit = this.limit;
+        copy.groupBy = this.groupBy;
         copy.order = this.order;
         copy.join = this.join;
         return copy;
@@ -79,6 +81,12 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
         return select(Arrays.asList(columns));
     }
 
+    public Select groupBy(Parameter groupBy) {
+        Select select = duplicate();
+        select.groupBy = groupBy;
+        return select;
+    }
+
     public Select offset(int offset) {
         return offset(new ObjectParameter(offset));
     }
@@ -99,11 +107,11 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
         return select;
     }
 
-    public Select order(OrderParameter... order) {
+    public Select order(Parameter... order) {
         return order(Arrays.asList(order));
     }
 
-    public Select order(List<OrderParameter> order) {
+    public Select order(List<Parameter> order) {
         Select select = duplicate();
         select.order = order;
         return select;
@@ -161,9 +169,15 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
             parameters.addAll(filterString.getParameters());
         }
 
+        if (this.groupBy != null) {
+            sb.append(" GROUP BY ");
+            sb.append(this.groupBy.getKey());
+            parameters.add(this.groupBy);
+        }
+
         if (this.order != null) {
             sb.append(" ORDER BY ");
-            for (OrderParameter order : this.order) {
+            for (Parameter order : this.order) {
                 sb.append(order.getKey());
                 parameters.add(order);
             }

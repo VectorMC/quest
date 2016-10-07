@@ -8,7 +8,7 @@ import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.query.Filter;
 import net.avicus.quest.query.Filterable;
 import net.avicus.quest.parameter.ObjectParameter;
-import net.avicus.quest.parameter.OrderParameter;
+import net.avicus.quest.parameter.DirectionalParameter;
 import net.avicus.quest.parameter.FieldParameter;
 
 import java.sql.PreparedStatement;
@@ -21,7 +21,7 @@ public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Upd
     private final Map<String, Parameter> changes;
     private Filter filter;
     private Parameter limit;
-    private List<OrderParameter> order;
+    private List<DirectionalParameter> order;
 
     public Update(Database database, FieldParameter table) {
         this.database = database;
@@ -81,11 +81,11 @@ public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Upd
         return update;
     }
 
-    public Update order(OrderParameter... order) {
+    public Update order(DirectionalParameter... order) {
         return order(Arrays.asList(order));
     }
 
-    public Update order(List<OrderParameter> order) {
+    public Update order(List<DirectionalParameter> order) {
         Update update = duplicate();
         update.order = order;
         return update;
@@ -126,7 +126,7 @@ public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Upd
 
         if (this.order != null) {
             sb.append(" ORDER BY ");
-            for (OrderParameter order : this.order) {
+            for (DirectionalParameter order : this.order) {
                 sb.append(order.getKey());
                 parameters.add(order);
             }
