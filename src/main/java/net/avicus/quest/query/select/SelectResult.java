@@ -1,8 +1,9 @@
 package net.avicus.quest.query.select;
 
-import net.avicus.quest.QueryResult;
+import net.avicus.quest.query.QueryResult;
 import net.avicus.quest.Row;
 import net.avicus.quest.database.DatabaseException;
+import net.avicus.quest.table.RowMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 public class SelectResult implements QueryResult {
     private final ResultSet set;
@@ -80,18 +80,19 @@ public class SelectResult implements QueryResult {
         return rows;
     }
 
-    public <U> U getCurrentMapped(Function<Row, ? extends U> mapper) {
-        return mapper.apply(getCurrent());
+    public <M> M getCurrentMapped(RowMapper<M> mapper) {
+        return getCurrent().map(mapper);
     }
 
-    public <U> Optional<U> findFirstMapped(Function<Row, ? extends U> mapper) {
-        return findFirst().map(mapper);
+    public <M> Optional<M> findFirstMapped(RowMapper<M> mapper) {
+
+        return findFirst().map(mapper::map);
     }
 
-    public <U> List<U> toListMapped(Function<Row, ? extends U> mapper) {
+    public <M> List<M> toListMapped(RowMapper<M> mapper) {
         checkNotStarted();
 
-        List<U> rows = new ArrayList<>();
+        List<M> rows = new ArrayList<>();
         while (next()) {
             rows.add(getCurrentMapped(mapper));
         }

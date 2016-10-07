@@ -2,12 +2,15 @@ package net.avicus.quest;
 
 import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.query.select.SelectResult;
+import net.avicus.quest.table.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +26,14 @@ public class Row {
         this.values = values;
     }
 
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        for (int i = 0; i < this.columnNames.size(); i++) {
+            values.put(this.columnNames.get(i), this.values.get(i).asObject().orElse(null));
+        }
+        return values;
+    }
+
     public boolean hasColumn(int number) {
         int index = number - 1;
         return index >= 0 && index < this.values.size();
@@ -36,7 +47,7 @@ public class Row {
     public String getColumnName(int number) {
         int index = number - 1;
         if (index < 0 || index >= this.columnNames.size()) {
-            throw new DatabaseException("Invalid column number: " + number + ".");
+            throw new IllegalArgumentException("Column number not present: " + number + ".");
         }
         return this.columnNames.get(index);
     }
@@ -45,17 +56,41 @@ public class Row {
         return this.columnNames.size();
     }
 
-    public RowValue getValue(int number) throws DatabaseException {
+    public RowValue get(int number) throws DatabaseException {
         int index = number - 1;
-        if (index < 0 || index >= this.values.size()) {
-            throw new DatabaseException("Invalid column number: " + number + ".");
+        if (!hasColumn(number)) {
+            throw new IllegalArgumentException("Column number not present: " + number + ".");
         }
         return this.values.get(index);
     }
 
-    public RowValue getValue(String column) {
+    public RowValue get(String column) {
         int number = this.columnNames.indexOf(column) + 1;
-        return getValue(number);
+        if (number == 0) {
+            throw new IllegalArgumentException("Column name not present: " + column + ".");
+        }
+        return get(number);
+    }
+
+    public <U> U map(RowMapper<U> mapper) {
+        return mapper.map(this);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Row(");
+        for (int i = 0; i < this.columnNames.size(); i++) {
+            sb.append(this.columnNames.get(i));
+            sb.append("[").append(i + 1).append("]");
+            sb.append("=");
+            sb.append(this.values.get(i));
+            if (i != this.columnNames.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
     }
 
     public static Row fromSelectResultSet(SelectResult result, ResultSet set) {
@@ -95,20 +130,31 @@ public class Row {
         return new Row(new ArrayList<>(data.keySet()), values);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Row(");
-        for (int i = 0; i < this.columnNames.size(); i++) {
-            sb.append(this.columnNames.get(i));
-            sb.append("[").append(i + 1).append("]");
-            sb.append("=");
-            sb.append(this.values.get(i));
-            if (i != this.columnNames.size() - 1) {
-                sb.append(", ");
-            }
+    public static RowBuilder builder() {
+        return new RowBuilder();
+    }
+
+    public static class RowBuilder {
+        private final Map<String, RowValue> values;
+
+        private RowBuilder() {
+            this.values = new HashMap<>();
         }
-        sb.append(")");
-        return sb.toString();
+
+        public RowBuilder value(String column, Object value) {
+            this.values.put(column, new RowValue(value));
+            return this;
+        }
+
+        public RowBuilder values(Map<String, Object> values) {
+            for (Entry<String, Object> entry : values.entrySet()) {
+                this.values.put(entry.getKey(), new RowValue(entry.getValue()));
+            }
+            return this;
+        }
+
+        public Row build() {
+            return new Row(new ArrayList<>(this.values.keySet()), new ArrayList<>(this.values.values()));
+        }
     }
 }

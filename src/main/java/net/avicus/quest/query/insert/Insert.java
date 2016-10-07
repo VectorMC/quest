@@ -2,7 +2,7 @@ package net.avicus.quest.query.insert;
 
 import net.avicus.quest.Parameter;
 import net.avicus.quest.ParameterizedString;
-import net.avicus.quest.Query;
+import net.avicus.quest.query.Query;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.parameter.FieldParameter;
@@ -27,7 +27,7 @@ public class Insert implements Query<InsertResult, InsertConfig> {
         return copy;
     }
 
-    public Insert add(Insertion insertion) {
+    public Insert plus(Insertion insertion) {
         Insert query = duplicate();
         query.insertions.add(insertion);
         return query;
@@ -77,12 +77,14 @@ public class Insert implements Query<InsertResult, InsertConfig> {
     }
 
     @Override
-    public InsertResult execute(Optional<InsertConfig> config) throws DatabaseException {
+    public InsertResult execute(Optional<InsertConfig> optConfig) throws DatabaseException {
+        InsertConfig config = optConfig.orElse(InsertConfig.DEFAULT);
+
         // The query
         ParameterizedString query = build();
 
         // Create statement
-        PreparedStatement statement = config.orElse(InsertConfig.DEFAULT).createStatement(this.database, query.getSql());
+        PreparedStatement statement = config.createStatement(this.database, query.getSql());
 
         // Add variables (?, ?)
         query.apply(statement, 1);

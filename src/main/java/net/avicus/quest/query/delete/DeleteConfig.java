@@ -1,6 +1,6 @@
 package net.avicus.quest.query.delete;
 
-import net.avicus.quest.QueryConfig;
+import net.avicus.quest.query.QueryConfig;
 import net.avicus.quest.database.Database;
 
 import java.sql.PreparedStatement;

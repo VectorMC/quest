@@ -1,6 +1,6 @@
 package net.avicus.quest.query.select;
 
-import net.avicus.quest.QueryConfig;
+import net.avicus.quest.query.QueryConfig;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
 

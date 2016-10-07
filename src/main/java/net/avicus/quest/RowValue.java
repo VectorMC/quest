@@ -16,8 +16,8 @@ public class RowValue {
         this.data = data;
     }
 
-    public <T> T as(Class<T> type) {
-        T data = asNullable(type).orElse(null);
+    public <T> T asRequired(Class<T> type) {
+        T data = as(type).orElse(null);
         if (data == null) {
             throw new DatabaseException("Unexpected null value.");
         }
@@ -25,7 +25,7 @@ public class RowValue {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> asNullable(Class<T> type) {
+    public <T> Optional<T> as(Class<T> type) {
         if (this.data == null)
             return Optional.empty();
 
@@ -33,108 +33,116 @@ public class RowValue {
         return Optional.of(data);
     }
 
-    public Optional<String> asNullableString() {
-        return asNullable(String.class);
+    public Optional<Object> asObject() {
+        return as(Object.class);
     }
 
-    public String asString() {
+    public Object asRequiredObject() {
+        return asRequired(Object.class);
+    }
+
+    public Optional<String> asString() {
         return as(String.class);
     }
 
-    public Optional<Date> asNullableDate() {
-        return asNullable(Date.class);
+    public String asRequiredString() {
+        return asRequired(String.class);
     }
 
-    public Date asDate() {
+    public Optional<Date> asDate() {
         return as(Date.class);
     }
 
-    public Optional<Time> asNullableTime() {
-        return asNullable(Time.class);
+    public Date asRequiredDate() {
+        return asRequired(Date.class);
     }
 
-    public Date asTime() {
+    public Optional<Time> asTime() {
         return as(Time.class);
     }
 
-    public Optional<Timestamp> asNullableTimestamp() {
-        return asNullable(Timestamp.class);
+    public Time asRequiredTime() {
+        return asRequired(Time.class);
     }
 
-    public Timestamp asTimestamp() {
+    public Optional<Timestamp> asTimestamp() {
         return as(Timestamp.class);
     }
 
-    public Optional<Boolean> asNullableBoolean() {
-        return asNullable(Object.class).map(RowValue::booleanValue);
+    public Timestamp asRequiredTimestamp() {
+        return asRequired(Timestamp.class);
     }
 
-    public boolean asBoolean() {
-        return booleanValue(as(Object.class));
+    public Optional<Boolean> asBoolean() {
+        return as(Object.class).map(RowValue::booleanValue);
     }
 
-    public Optional<Integer> asNullableInteger() {
-        return asNullable(Integer.class);
+    public boolean asRequiredBoolean() {
+        return booleanValue(asRequired(Object.class));
     }
 
-    public int asInteger() {
+    public Optional<Integer> asInteger() {
         return as(Integer.class);
     }
 
-    public Optional<Long> asNullableLong() {
-        return asNullable(Long.class);
+    public int asRequiredInteger() {
+        return asRequired(Integer.class);
     }
 
-    public long asLong() {
+    public Optional<Long> asLong() {
         return as(Long.class);
     }
 
-    public Optional<Float> asNullableFloat() {
-        return asNullable(Float.class);
+    public long asRequiredLong() {
+        return asRequired(Long.class);
     }
 
-    public float asFloat() {
+    public Optional<Float> asFloat() {
         return as(Float.class);
     }
 
-    public Optional<Double> asNullableDouble() {
-        return asNullable(Double.class);
+    public float asRequiredFloat() {
+        return asRequired(Float.class);
     }
 
-    public double asDouble() {
+    public Optional<Double> asDouble() {
         return as(Double.class);
     }
 
-    public Optional<Short> asNullableShort() {
-        return asNullable(Short.class);
+    public double asRequiredDouble() {
+        return asRequired(Double.class);
     }
 
-    public short asShort() {
+    public Optional<Short> asShort() {
         return as(Short.class);
     }
 
-    public Optional<Byte> asNullableByte() {
-        return asNullable(Byte.class);
+    public short asRequiredShort() {
+        return asRequired(Short.class);
     }
 
-    public byte asByte() {
+    public Optional<Byte> asByte() {
         return as(Byte.class);
     }
 
-    public Optional<BigDecimal> asNullableBigDecimal() {
-        return asNullable(BigDecimal.class);
+    public byte asRequiredByte() {
+        return asRequired(Byte.class);
     }
 
-    public BigDecimal asBigDecimal() {
+    public Optional<BigDecimal> asBigDecimal() {
         return as(BigDecimal.class);
     }
 
-    public Optional<Number> asNullableNumber() {
-        return asNullable(Number.class);
+    public BigDecimal asRequiredBigDecimal() {
+        return asRequired(BigDecimal.class);
     }
 
-    public Number asNumber() {
+    public Optional<Number> asNumber() {
         return as(Number.class);
+    }
+
+    public Number asRequiredNumber() {
+        return asRequired(Number.class);
     }
 
     @Override

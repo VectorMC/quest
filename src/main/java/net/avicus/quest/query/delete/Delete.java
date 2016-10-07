@@ -2,11 +2,11 @@ package net.avicus.quest.query.delete;
 
 import net.avicus.quest.Parameter;
 import net.avicus.quest.ParameterizedString;
-import net.avicus.quest.Query;
+import net.avicus.quest.query.Query;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
-import net.avicus.quest.filter.Filter;
-import net.avicus.quest.filter.Filterable;
+import net.avicus.quest.query.Filter;
+import net.avicus.quest.query.Filterable;
 import net.avicus.quest.parameter.ObjectParameter;
 import net.avicus.quest.parameter.OrderParameter;
 import net.avicus.quest.parameter.FieldParameter;
@@ -45,11 +45,11 @@ public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Del
         }
     }
 
-    public Delete where(Filter filter, Filter... ands) {
+    public Delete where(Filter filter, Filter and, Filter... ands) {
         // And the ands
-        Filter result = filter;
-        for (Filter and : ands) {
-            result = result.and(and);
+        Filter result = filter.and(and);
+        for (Filter additional : ands) {
+            result = result.and(additional);
         }
 
         Delete query = duplicate();

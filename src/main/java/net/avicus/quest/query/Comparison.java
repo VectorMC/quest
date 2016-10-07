@@ -1,4 +1,4 @@
-package net.avicus.quest.filter;
+package net.avicus.quest.query;
 
 public interface Comparison {
     Comparison EQUAL = () -> " = ";

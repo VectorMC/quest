@@ -1,4 +1,4 @@
-package net.avicus.quest;
+package net.avicus.quest.query;
 
 import java.util.Optional;
 

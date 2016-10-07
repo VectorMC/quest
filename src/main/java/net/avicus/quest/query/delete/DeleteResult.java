@@ -1,6 +1,6 @@
 package net.avicus.quest.query.delete;
 
-import net.avicus.quest.QueryResult;
+import net.avicus.quest.query.QueryResult;
 import net.avicus.quest.database.DatabaseException;
 
 import java.sql.PreparedStatement;

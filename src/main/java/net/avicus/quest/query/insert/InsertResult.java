@@ -1,19 +1,19 @@
 package net.avicus.quest.query.insert;
 
-import net.avicus.quest.QueryResult;
+import net.avicus.quest.query.QueryResult;
 import net.avicus.quest.Row;
 import net.avicus.quest.database.DatabaseException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.Consumer;
+import java.util.Optional;
 
 public class InsertResult implements QueryResult {
     private final int result;
-    private final Row generated;
+    private final Optional<Row> generated;
 
-    public InsertResult(int result, Row generated) {
+    public InsertResult(int result, Optional<Row> generated) {
         this.result = result;
         this.generated = generated;
     }
@@ -22,20 +22,19 @@ public class InsertResult implements QueryResult {
         return result;
     }
 
-    public Row getGenerated() {
+    public Optional<Row> getGenerated() {
         return this.generated;
-    }
-
-    public void applyGenerated(Consumer<Row> consumer) {
-        consumer.accept(getGenerated());
     }
 
     public static InsertResult execute(PreparedStatement statement) throws DatabaseException {
         try {
             int result = statement.executeUpdate();
+            Optional<Row> generated = Optional.empty();
             ResultSet set = statement.getGeneratedKeys();
-            set.next();
-            Row generated = Row.fromResultSet(set);
+            if (set != null) {
+                set.next();
+                generated = Optional.of(Row.fromResultSet(set));
+            }
             return new InsertResult(result, generated);
         } catch (SQLException e) {
             throw new DatabaseException(e);

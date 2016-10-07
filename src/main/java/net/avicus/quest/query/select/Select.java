@@ -2,11 +2,11 @@ package net.avicus.quest.query.select;
 
 import net.avicus.quest.Parameter;
 import net.avicus.quest.ParameterizedString;
-import net.avicus.quest.Query;
+import net.avicus.quest.query.Query;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
-import net.avicus.quest.filter.Filter;
-import net.avicus.quest.filter.Filterable;
+import net.avicus.quest.query.Filter;
+import net.avicus.quest.query.Filterable;
 import net.avicus.quest.parameter.*;
 
 import java.sql.PreparedStatement;
@@ -49,11 +49,11 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
         }
     }
 
-    public Select where(Filter filter, Filter... ands) {
+    public Select where(Filter filter, Filter and, Filter... ands) {
         // And the ands
-        Filter result = filter;
-        for (Filter and : ands) {
-            result = result.and(and);
+        Filter result = filter.and(and);
+        for (Filter additional : ands) {
+            result = result.and(additional);
         }
 
         Select select = duplicate();

@@ -1,7 +1,6 @@
-package net.avicus.quest.filter;
+package net.avicus.quest.query;
 
 import net.avicus.quest.Parameter;
-import net.avicus.quest.Query;
 import net.avicus.quest.parameter.FieldParameter;
 import net.avicus.quest.parameter.ObjectParameter;
 

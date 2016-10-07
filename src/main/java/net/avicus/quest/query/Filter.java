@@ -1,7 +1,9 @@
-package net.avicus.quest.filter;
+package net.avicus.quest.query;
 
 import net.avicus.quest.Parameter;
 import net.avicus.quest.ParameterizedString;
+import net.avicus.quest.parameter.FieldParameter;
+import net.avicus.quest.parameter.ObjectParameter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,37 +24,51 @@ public class Filter {
         this.ors = ors;
     }
 
-    /**
-     * A filter (key compared to value with provided comparison method).
-     * @param key
-     * @param value
-     * @param comparison
-     */
     public Filter(Parameter key, Parameter value, Comparison comparison) {
         this(key, value, comparison, Collections.emptyList(), Collections.emptyList());
     }
 
-    /**
-     * A filter, defaulting to a comparison of EQUAL.
-     * @param key
-     * @param value
-     */
     public Filter(Parameter key, Parameter value) {
         this(key, value, Comparison.EQUAL, Collections.emptyList(), Collections.emptyList());
     }
 
+    public Filter(Parameter key, Object value, Comparison comparison) {
+        this(key, new ObjectParameter(value), comparison);
+    }
+
+    public Filter(Parameter key, Object value) {
+        this(key, new ObjectParameter(value));
+    }
+
+    public Filter(String field, Object value, Comparison comparison) {
+        this(new FieldParameter(field), new ObjectParameter(value), comparison);
+    }
+
+    public Filter(String field, Object value) {
+        this(new FieldParameter(field), new ObjectParameter(value));
+    }
+
+    public Filter(String field, Parameter value, Comparison comparison) {
+        this(new FieldParameter(field), value, comparison);
+    }
+
+    public Filter(String field, Parameter value) {
+        this(new FieldParameter(field), value);
+    }
+
+    public Filter duplicate() {
+        Filter filter = new Filter(this.key, this.value, this.comparison);
+        filter.ands.addAll(this.ands);
+        filter.ors.addAll(this.ors);
+        return filter;
+    }
+
     public Filter and(Filter filter) {
-        List<Filter> ands = new ArrayList<>(this.ands.size() + 1);
-        ands.addAll(this.ands);
-        ands.add(filter);
-        return new Filter(this.key, this.value, this.comparison, ands, this.ors);
+        return duplicate().and(filter);
     }
 
     public Filter or(Filter filter) {
-        List<Filter> ors = new ArrayList<>(this.ors.size() + 1);
-        ors.addAll(this.ors);
-        ors.add(filter);
-        return new Filter(this.key, this.value, this.comparison, this.ands, ors);
+        return duplicate().or(filter);
     }
 
     public ParameterizedString build() {
