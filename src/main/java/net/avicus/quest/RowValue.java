@@ -34,12 +34,14 @@ public class RowValue {
         return Optional.of(data);
     }
 
-    public <T> Optional<T> as(MappedColumn<T> type) {
-        return as(type.getType());
+    @SuppressWarnings("unchecked")
+    public <T> Optional<T> as(MappedColumn<?, T> type) {
+        return (Optional<T>) as(Object.class);
     }
 
-    public <T> T asRequired(MappedColumn<T> type) {
-        return asRequired(type.getType());
+    @SuppressWarnings("unchecked")
+    public <T> T asRequired(MappedColumn<?, T> type) {
+        return (T) asRequired(Object.class);
     }
 
     public Optional<Object> asObject() {

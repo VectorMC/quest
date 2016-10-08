@@ -1,5 +1,6 @@
 package net.avicus.quest.database;
 
+import net.avicus.quest.Param;
 import net.avicus.quest.database.url.DatabaseUrl;
 import net.avicus.quest.parameter.FieldParam;
 import net.avicus.quest.query.delete.Delete;
@@ -112,6 +113,22 @@ public class Database {
             }
         }
         return UpdateResult.execute(statement);
+    }
+
+    public Select select(FieldParam table, String... columns) {
+        return new Select(this, table).select(columns);
+    }
+
+    public Select select(String table, String... columns) {
+        return select(new FieldParam(table)).select(columns);
+    }
+
+    public Select select(FieldParam table, Param... params) {
+        return new Select(this, table).select(params);
+    }
+
+    public Select select(String table, Param... params) {
+        return select(new FieldParam(table)).select(params);
     }
 
     public Select select(FieldParam table) {

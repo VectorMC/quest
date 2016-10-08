@@ -5,12 +5,24 @@ import net.avicus.quest.Param;
 import java.util.List;
 
 public class CountParam implements Param {
+    /**
+     * COUNT(*)
+     */
     public static final CountParam WILDCARD = new CountParam(WildcardParam.INSTANCE);
 
-    private final Param expression;
+    /**
+     * COUNT(1)
+     */
+    public static final CountParam ONE = new CountParam(1);
 
-    public CountParam(Param expression) {
-        this.expression = expression;
+    private final Param child;
+
+    public CountParam(Param child) {
+        this.child = child;
+    }
+
+    public CountParam(Object object) {
+        this(new ObjectParam(object));
     }
 
     public CountParam(String column) {
@@ -19,15 +31,15 @@ public class CountParam implements Param {
 
     @Override
     public String getKey() {
-        return "COUNT(" + this.expression.getKey() + ")";
+        return "COUNT(" + this.child.getKey() + ")";
     }
 
     public List<Object> getObjects() {
-        return this.expression.getObjects();
+        return this.child.getObjects();
     }
 
     @Override
     public String toString() {
-        return "CountParam(expression=" + this.expression + ")";
+        return "CountParam(child=" + this.child + ")";
     }
 }

@@ -1,5 +1,6 @@
 package net.avicus.quest.table;
 
+import net.avicus.quest.Param;
 import net.avicus.quest.Row;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.parameter.FieldParam;
@@ -37,6 +38,14 @@ public abstract class Table<M extends Model> implements RowMapper<M> {
 
     public Select select() {
         return new Select(this.database, this.table);
+    }
+
+    public Select select(String... columns) {
+        return new Select(this.database, this.table).select(columns);
+    }
+
+    public Select select(Param... params) {
+        return new Select(this.database, this.table).select(params);
     }
 
     public Insert insert(M model) {

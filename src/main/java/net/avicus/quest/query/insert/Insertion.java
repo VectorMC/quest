@@ -36,7 +36,7 @@ public class Insertion {
     }
 
     public Param getValue(String column) {
-        return this.values.containsKey(column) ? this.values.get(column) : new NullParam();
+        return this.values.containsKey(column) ? this.values.get(column) : NullParam.INSTANCE;
     }
 
     public static Insertion fromRow(Row row) {

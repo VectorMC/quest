@@ -12,7 +12,7 @@ import net.avicus.quest.parameter.*;
 import java.sql.PreparedStatement;
 import java.util.*;
 
-public class Select implements Query<SelectResult, SelectConfig>, Filterable<Select> {
+public class Select implements Query<SelectResult, SelectConfig>, Filterable<Select>, Param {
     private final Database database;
     private final FieldParam table;
     private Filter filter;
@@ -140,7 +140,7 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
         // Columns to select
         List<Param> columns = this.columns;
         if (columns == null || columns.isEmpty()) {
-            columns = Collections.singletonList(new WildcardParam());
+            columns = Collections.singletonList(WildcardParam.INSTANCE);
         }
         for (Param column : columns) {
             sb.append(column.getKey());
@@ -215,5 +215,19 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
     @Override
     public String toString() {
         return "Select(" + build() + ")";
+    }
+
+    @Override
+    public String getKey() {
+        return build().getSql();
+    }
+
+    @Override
+    public List<Object> getObjects() {
+        List<Object> objects = new ArrayList<>();
+        for (Param param : build().getParameters()) {
+            objects.addAll(param.getObjects());
+        }
+        return objects;
     }
 }
