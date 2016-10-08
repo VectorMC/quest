@@ -2,10 +2,9 @@ package net.avicus.quest.table;
 
 import net.avicus.quest.Row;
 import net.avicus.quest.database.Database;
-import net.avicus.quest.parameter.FieldParameter;
+import net.avicus.quest.parameter.FieldParam;
 import net.avicus.quest.query.delete.Delete;
 import net.avicus.quest.query.insert.Insert;
-import net.avicus.quest.query.insert.InsertConfig;
 import net.avicus.quest.query.insert.InsertResult;
 import net.avicus.quest.query.select.Select;
 import net.avicus.quest.query.update.Update;
@@ -17,15 +16,15 @@ import java.util.function.Consumer;
 
 public abstract class Table<M extends Model> implements RowMapper<M> {
     private final Database database;
-    private final FieldParameter table;
+    private final FieldParam table;
 
-    public Table(Database database, FieldParameter table) {
+    public Table(Database database, FieldParam table) {
         this.database = database;
         this.table = table;
     }
 
     public Table(Database database, String table) {
-        this(database, new FieldParameter(table));
+        this(database, new FieldParam(table));
     }
 
     public Delete delete() {
@@ -91,7 +90,7 @@ public abstract class Table<M extends Model> implements RowMapper<M> {
         return this.database;
     }
 
-    public FieldParameter getTableParameter() {
+    public FieldParam getTableParameter() {
         return this.table;
     }
 }

@@ -1,18 +1,18 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.List;
 
-public class AvgParameter implements Parameter {
-    private final Parameter expression;
+public class AvgParam implements Param {
+    private final Param expression;
 
-    public AvgParameter(Parameter expression) {
+    public AvgParam(Param expression) {
         this.expression = expression;
     }
 
-    public AvgParameter(String column) {
-        this(new FieldParameter(column));
+    public AvgParam(String column) {
+        this(new FieldParam(column));
     }
 
     @Override
@@ -26,6 +26,6 @@ public class AvgParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "AvgParameter(expression=" + this.expression + ")";
+        return "AvgParam(expression=" + this.expression + ")";
     }
 }

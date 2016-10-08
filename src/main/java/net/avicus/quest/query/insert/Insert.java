@@ -1,21 +1,21 @@
 package net.avicus.quest.query.insert;
 
-import net.avicus.quest.Parameter;
-import net.avicus.quest.ParameterizedString;
+import net.avicus.quest.Param;
+import net.avicus.quest.ParamString;
+import net.avicus.quest.parameter.FieldParam;
 import net.avicus.quest.query.Query;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
-import net.avicus.quest.parameter.FieldParameter;
 
 import java.sql.PreparedStatement;
 import java.util.*;
 
 public class Insert implements Query<InsertResult, InsertConfig> {
     private final Database database;
-    private final FieldParameter table;
+    private final FieldParam table;
     private final List<Insertion> insertions;
 
-    public Insert(Database database, FieldParameter table) {
+    public Insert(Database database, FieldParam table) {
         this.database = database;
         this.table = table;
         this.insertions = new ArrayList<>();
@@ -33,13 +33,13 @@ public class Insert implements Query<InsertResult, InsertConfig> {
         return query;
     }
 
-    public ParameterizedString build() {
+    public ParamString build() {
         if (this.insertions.isEmpty()) {
             throw new DatabaseException("No insertions to be made.");
         }
 
         StringBuilder sb = new StringBuilder();
-        List<Parameter> parameters = new ArrayList<>();
+        List<Param> parameters = new ArrayList<>();
 
         sb.append("INSERT INTO ");
 
@@ -64,7 +64,7 @@ public class Insert implements Query<InsertResult, InsertConfig> {
         for (Insertion insertion : this.insertions) {
             sb.append("(");
             for (String column : columns) {
-                Parameter value = insertion.getValue(column);
+                Param value = insertion.getValue(column);
                 sb.append(value.getKey());
                 parameters.add(value);
                 sb.append(", ");
@@ -73,7 +73,7 @@ public class Insert implements Query<InsertResult, InsertConfig> {
             sb.append(")");
         }
 
-        return new ParameterizedString(sb.toString(), parameters);
+        return new ParamString(sb.toString(), parameters);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class Insert implements Query<InsertResult, InsertConfig> {
         InsertConfig config = optConfig.orElse(InsertConfig.DEFAULT);
 
         // The query
-        ParameterizedString query = build();
+        ParamString query = build();
 
         // Create statement
         PreparedStatement statement = config.createStatement(this.database, query.getSql());

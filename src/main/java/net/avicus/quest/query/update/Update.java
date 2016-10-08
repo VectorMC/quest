@@ -1,15 +1,15 @@
 package net.avicus.quest.query.update;
 
-import net.avicus.quest.Parameter;
-import net.avicus.quest.ParameterizedString;
+import net.avicus.quest.Param;
+import net.avicus.quest.ParamString;
+import net.avicus.quest.parameter.DirectionalParam;
+import net.avicus.quest.parameter.ObjectParam;
 import net.avicus.quest.query.Query;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.query.Filter;
 import net.avicus.quest.query.Filterable;
-import net.avicus.quest.parameter.ObjectParameter;
-import net.avicus.quest.parameter.DirectionalParameter;
-import net.avicus.quest.parameter.FieldParameter;
+import net.avicus.quest.parameter.FieldParam;
 
 import java.sql.PreparedStatement;
 import java.util.*;
@@ -17,13 +17,13 @@ import java.util.Map.Entry;
 
 public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Update> {
     private final Database database;
-    private final FieldParameter table;
-    private final Map<String, Parameter> changes;
+    private final FieldParam table;
+    private final Map<String, Param> changes;
     private Filter filter;
-    private Parameter limit;
-    private List<DirectionalParameter> order;
+    private Param limit;
+    private List<DirectionalParam> order;
 
-    public Update(Database database, FieldParameter table) {
+    public Update(Database database, FieldParam table) {
         this.database = database;
         this.table = table;
         this.changes = new HashMap<>();
@@ -61,43 +61,43 @@ public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Upd
         return query;
     }
 
-    public Update set(String column, Parameter value) {
+    public Update set(String column, Param value) {
         Update query = duplicate();
         query.changes.put(column, value);
         return query;
     }
 
     public Update set(String column, Object value) {
-        return set(column, new ObjectParameter(value));
+        return set(column, new ObjectParam(value));
     }
 
     public Update limit(int limit) {
-        return limit(new ObjectParameter(limit));
+        return limit(new ObjectParam(limit));
     }
 
-    public Update limit(Parameter limit) {
+    public Update limit(Param limit) {
         Update update = duplicate();
         update.limit = limit;
         return update;
     }
 
-    public Update order(DirectionalParameter... order) {
+    public Update order(DirectionalParam... order) {
         return order(Arrays.asList(order));
     }
 
-    public Update order(List<DirectionalParameter> order) {
+    public Update order(List<DirectionalParam> order) {
         Update update = duplicate();
         update.order = order;
         return update;
     }
 
-    public ParameterizedString build() {
+    public ParamString build() {
         if (this.changes.isEmpty()) {
             throw new DatabaseException("No changes to be made.");
         }
 
         StringBuilder sb = new StringBuilder();
-        List<Parameter> parameters = new ArrayList<>();
+        List<Param> parameters = new ArrayList<>();
 
         sb.append("UPDATE ");
 
@@ -106,7 +106,7 @@ public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Upd
 
         sb.append(" SET ");
 
-        for (Entry<String, Parameter> entry : this.changes.entrySet()) {
+        for (Entry<String, Param> entry : this.changes.entrySet()) {
             sb.append(entry.getKey());
             sb.append(" = ");
             sb.append(entry.getValue().getKey());
@@ -119,14 +119,14 @@ public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Upd
 
         if (this.filter != null) {
             sb.append(" WHERE ");
-            ParameterizedString filterString = this.filter.build();
+            ParamString filterString = this.filter.build();
             sb.append(filterString.getSql());
             parameters.addAll(filterString.getParameters());
         }
 
         if (this.order != null) {
             sb.append(" ORDER BY ");
-            for (DirectionalParameter order : this.order) {
+            for (DirectionalParam order : this.order) {
                 sb.append(order.getKey());
                 parameters.add(order);
             }
@@ -138,13 +138,13 @@ public class Update implements Query<UpdateResult, UpdateConfig>, Filterable<Upd
             parameters.add(this.limit);
         }
 
-        return new ParameterizedString(sb.toString(), parameters);
+        return new ParamString(sb.toString(), parameters);
     }
 
     @Override
     public UpdateResult execute(Optional<UpdateConfig> config) throws DatabaseException {
         // The query
-        ParameterizedString query = build();
+        ParamString query = build();
 
         // Create statement
         PreparedStatement statement = config.orElse(UpdateConfig.DEFAULT).createStatement(this.database, query.getSql());

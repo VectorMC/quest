@@ -1,22 +1,23 @@
 package net.avicus.quest.query;
 
-import net.avicus.quest.Parameter;
-import net.avicus.quest.ParameterizedString;
-import net.avicus.quest.parameter.FieldParameter;
-import net.avicus.quest.parameter.ObjectParameter;
+import net.avicus.quest.Param;
+import net.avicus.quest.ParamString;
+import net.avicus.quest.parameter.ComparisonParam;
+import net.avicus.quest.parameter.FieldParam;
+import net.avicus.quest.parameter.ObjectParam;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Filter {
-    private final Parameter key;
-    private final Parameter value;
-    private final Comparison comparison;
+    private final Param key;
+    private final Param value;
+    private final ComparisonParam comparison;
     private final List<Filter> ands;
     private final List<Filter> ors;
 
-    private Filter(Parameter key, Parameter value, Comparison comparison, List<Filter> ands, List<Filter> ors) {
+    private Filter(Param key, Param value, ComparisonParam comparison, List<Filter> ands, List<Filter> ors) {
         this.key = key;
         this.value = value;
         this.comparison = comparison;
@@ -24,36 +25,36 @@ public class Filter {
         this.ors = ors;
     }
 
-    public Filter(Parameter key, Parameter value, Comparison comparison) {
+    public Filter(Param key, Param value, ComparisonParam comparison) {
         this(key, value, comparison, Collections.emptyList(), Collections.emptyList());
     }
 
-    public Filter(Parameter key, Parameter value) {
-        this(key, value, Comparison.EQUAL, Collections.emptyList(), Collections.emptyList());
+    public Filter(Param key, Param value) {
+        this(key, value, ComparisonParam.EQUAL, Collections.emptyList(), Collections.emptyList());
     }
 
-    public Filter(Parameter key, Object value, Comparison comparison) {
-        this(key, new ObjectParameter(value), comparison);
+    public Filter(Param key, Object value, ComparisonParam comparison) {
+        this(key, new ObjectParam(value), comparison);
     }
 
-    public Filter(Parameter key, Object value) {
-        this(key, new ObjectParameter(value));
+    public Filter(Param key, Object value) {
+        this(key, new ObjectParam(value));
     }
 
-    public Filter(String field, Object value, Comparison comparison) {
-        this(new FieldParameter(field), new ObjectParameter(value), comparison);
+    public Filter(String field, Object value, ComparisonParam comparison) {
+        this(new FieldParam(field), new ObjectParam(value), comparison);
     }
 
     public Filter(String field, Object value) {
-        this(new FieldParameter(field), new ObjectParameter(value));
+        this(new FieldParam(field), new ObjectParam(value));
     }
 
-    public Filter(String field, Parameter value, Comparison comparison) {
-        this(new FieldParameter(field), value, comparison);
+    public Filter(String field, Param value, ComparisonParam comparison) {
+        this(new FieldParam(field), value, comparison);
     }
 
-    public Filter(String field, Parameter value) {
-        this(new FieldParameter(field), value);
+    public Filter(String field, Param value) {
+        this(new FieldParam(field), value);
     }
 
     public Filter duplicate() {
@@ -71,25 +72,27 @@ public class Filter {
         return duplicate().or(filter);
     }
 
-    public ParameterizedString build() {
+    public ParamString build() {
         StringBuilder sb = new StringBuilder();
-        List<Parameter> parameters = new ArrayList<>();
+        List<Param> parameters = new ArrayList<>();
 
         sb.append("(");
         sb.append(this.key.getKey());
-        sb.append(this.comparison.toSql());
+        sb.append(this.comparison.getKey());
         sb.append(this.value.getKey());
         sb.append(")");
 
         parameters.add(this.key);
+        parameters.add(this.comparison);
         parameters.add(this.value);
 
         if (!this.ands.isEmpty()) {
             sb.append(" AND ");
-            if (this.ands.size() > 1)
+            if (this.ands.size() > 1) {
                 sb.append("(");
+            }
             for (Filter filter : this.ands) {
-                ParameterizedString built = filter.build();
+                ParamString built = filter.build();
                 sb.append(built.getSql());
                 parameters.addAll(built.getParameters());
 
@@ -97,16 +100,18 @@ public class Filter {
                     sb.append(" AND ");
                 }
             }
-            if (this.ands.size() > 1)
+            if (this.ands.size() > 1) {
                 sb.append(")");
+            }
         }
 
         if (!this.ors.isEmpty()) {
             sb.append(" OR ");
-            if (this.ors.size() > 1)
+            if (this.ors.size() > 1) {
                 sb.append("(");
+            }
             for (Filter filter : this.ors) {
-                ParameterizedString built = filter.build();
+                ParamString built = filter.build();
                 sb.append(built.getSql());
                 parameters.addAll(built.getParameters());
 
@@ -114,10 +119,11 @@ public class Filter {
                     sb.append(" OR ");
                 }
             }
-            if (this.ors.size() > 1)
+            if (this.ors.size() > 1) {
                 sb.append(")");
+            }
         }
 
-        return new ParameterizedString(sb.toString(), parameters);
+        return new ParamString(sb.toString(), parameters);
     }
 }

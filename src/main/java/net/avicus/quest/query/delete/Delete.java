@@ -1,27 +1,27 @@
 package net.avicus.quest.query.delete;
 
-import net.avicus.quest.Parameter;
-import net.avicus.quest.ParameterizedString;
+import net.avicus.quest.Param;
+import net.avicus.quest.ParamString;
+import net.avicus.quest.parameter.DirectionalParam;
+import net.avicus.quest.parameter.FieldParam;
 import net.avicus.quest.query.Query;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
 import net.avicus.quest.query.Filter;
 import net.avicus.quest.query.Filterable;
-import net.avicus.quest.parameter.ObjectParameter;
-import net.avicus.quest.parameter.DirectionalParameter;
-import net.avicus.quest.parameter.FieldParameter;
+import net.avicus.quest.parameter.ObjectParam;
 
 import java.sql.PreparedStatement;
 import java.util.*;
 
 public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Delete> {
     private final Database database;
-    private final FieldParameter table;
+    private final FieldParam table;
     private Filter filter;
-    private Parameter limit;
-    private List<DirectionalParameter> order;
+    private Param limit;
+    private List<DirectionalParam> order;
 
-    public Delete(Database database, FieldParameter table) {
+    public Delete(Database database, FieldParam table) {
         this.database = database;
         this.table = table;
     }
@@ -58,28 +58,28 @@ public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Del
     }
 
     public Delete limit(int limit) {
-        return limit(new ObjectParameter(limit));
+        return limit(new ObjectParam(limit));
     }
 
-    public Delete limit(Parameter limit) {
+    public Delete limit(Param limit) {
         Delete update = duplicate();
         update.limit = limit;
         return update;
     }
 
-    public Delete order(DirectionalParameter... order) {
+    public Delete order(DirectionalParam... order) {
         return order(Arrays.asList(order));
     }
 
-    public Delete order(List<DirectionalParameter> order) {
+    public Delete order(List<DirectionalParam> order) {
         Delete update = duplicate();
         update.order = order;
         return update;
     }
 
-    public ParameterizedString build() {
+    public ParamString build() {
         StringBuilder sb = new StringBuilder();
-        List<Parameter> parameters = new ArrayList<>();
+        List<Param> parameters = new ArrayList<>();
 
         sb.append("DELETE FROM ");
 
@@ -88,14 +88,14 @@ public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Del
 
         if (this.filter != null) {
             sb.append(" WHERE ");
-            ParameterizedString filterString = this.filter.build();
+            ParamString filterString = this.filter.build();
             sb.append(filterString.getSql());
             parameters.addAll(filterString.getParameters());
         }
 
         if (this.order != null) {
             sb.append(" ORDER BY ");
-            for (DirectionalParameter order : this.order) {
+            for (DirectionalParam order : this.order) {
                 sb.append(order.getKey());
                 parameters.add(order);
             }
@@ -107,13 +107,13 @@ public class Delete implements Query<DeleteResult, DeleteConfig>, Filterable<Del
             parameters.add(this.limit);
         }
 
-        return new ParameterizedString(sb.toString(), parameters);
+        return new ParamString(sb.toString(), parameters);
     }
 
     @Override
     public DeleteResult execute(Optional<DeleteConfig> config) throws DatabaseException {
         // The query
-        ParameterizedString query = build();
+        ParamString query = build();
 
         // Create statement
         PreparedStatement statement = config.orElse(DeleteConfig.DEFAULT).createStatement(this.database, query.getSql());

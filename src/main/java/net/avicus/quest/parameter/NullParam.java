@@ -1,14 +1,20 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.Collections;
 import java.util.List;
 
-public class WildcardParameter implements Parameter {
+public class NullParam implements Param {
+    public static final NullParam INSTANCE = new NullParam();
+
+    private NullParam() {
+
+    }
+
     @Override
     public String getKey() {
-        return "*";
+        return "NULL";
     }
 
     public List<Object> getObjects() {
@@ -17,6 +23,6 @@ public class WildcardParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "WildcardParameter()";
+        return "NullParam()";
     }
 }

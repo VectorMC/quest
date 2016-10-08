@@ -1,8 +1,9 @@
 package net.avicus.quest.query;
 
-import net.avicus.quest.Parameter;
-import net.avicus.quest.parameter.FieldParameter;
-import net.avicus.quest.parameter.ObjectParameter;
+import net.avicus.quest.Param;
+import net.avicus.quest.parameter.ComparisonParam;
+import net.avicus.quest.parameter.FieldParam;
+import net.avicus.quest.parameter.ObjectParam;
 
 /**
  * Something that can be where'd of course.
@@ -12,34 +13,34 @@ public interface Filterable<C extends Query> {
     C where(Filter filter);
 
     default C where(String column, Object value) {
-        return where(new FieldParameter(column), value);
+        return where(new FieldParam(column), value);
     }
 
-    default C where(String column, Parameter value) {
-        return where(new FieldParameter(column), value);
+    default C where(String column, Param value) {
+        return where(new FieldParam(column), value);
     }
 
-    default C where(String column, Object value, Comparison comparison) {
-        return where(new FieldParameter(column), value, comparison);
+    default C where(String column, Object value, ComparisonParam comparison) {
+        return where(new FieldParam(column), value, comparison);
     }
 
-    default C where(String column, Parameter value, Comparison comparison) {
-        return where(new FieldParameter(column), value, comparison);
+    default C where(String column, Param value, ComparisonParam comparison) {
+        return where(new FieldParam(column), value, comparison);
     }
 
-    default C where(Parameter column, Object value) {
-        return where(column, new ObjectParameter(value));
+    default C where(Param column, Object value) {
+        return where(column, new ObjectParam(value));
     }
 
-    default C where(Parameter column, Parameter value) {
-        return where(column, value, Comparison.EQUAL);
+    default C where(Param column, Param value) {
+        return where(column, value, ComparisonParam.EQUAL);
     }
 
-    default C where(Parameter column, Object value, Comparison comparison) {
-        return where(new Filter(column, new ObjectParameter(value), comparison));
+    default C where(Param column, Object value, ComparisonParam comparison) {
+        return where(new Filter(column, new ObjectParam(value), comparison));
     }
 
-    default C where(Parameter column, Parameter value, Comparison comparison) {
+    default C where(Param column, Param value, ComparisonParam comparison) {
         return where(new Filter(column, value, comparison));
     }
 }

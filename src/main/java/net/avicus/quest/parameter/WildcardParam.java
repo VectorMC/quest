@@ -1,14 +1,20 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.Collections;
 import java.util.List;
 
-public class NowParameter implements Parameter {
+public class WildcardParam implements Param {
+    public static final WildcardParam INSTANCE = new WildcardParam();
+
+    private WildcardParam() {
+
+    }
+
     @Override
     public String getKey() {
-        return "NOW()";
+        return "*";
     }
 
     public List<Object> getObjects() {
@@ -17,6 +23,6 @@ public class NowParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "NowParameter()";
+        return "WildcardParam()";
     }
 }

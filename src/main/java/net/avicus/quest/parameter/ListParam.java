@@ -1,6 +1,6 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +10,10 @@ import java.util.List;
  *
  * SELECT * FROM `users` WHERE `id` IN (?, ?, ?);
  */
-public class ListParameter implements Parameter {
-    private final List<Parameter> parameters;
+public class ListParam implements Param {
+    private final List<Param> parameters;
 
-    public ListParameter(List<Parameter> parameters) {
+    public ListParam(List<Param> parameters) {
         if (parameters.isEmpty()) {
             throw new IllegalArgumentException("List parameter must have at least one parameter.");
         }
@@ -23,8 +23,11 @@ public class ListParameter implements Parameter {
     @Override
     public String getKey() {
         StringBuilder sb = new StringBuilder("(");
-        for (Parameter parameter : this.parameters) {
+        for (Param parameter : this.parameters) {
             sb.append(parameter.getKey());
+            if (this.parameters.indexOf(parameter) != this.parameters.size() - 1) {
+                sb.append(", ");
+            }
         }
         sb.append(")");
         return sb.toString();
@@ -32,7 +35,7 @@ public class ListParameter implements Parameter {
 
     public List<Object> getObjects() {
         List<Object> values = new ArrayList<>();
-        for (Parameter parameter : this.parameters) {
+        for (Param parameter : this.parameters) {
             values.addAll(parameter.getObjects());
         }
         return values;
@@ -40,6 +43,6 @@ public class ListParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "ListParameter(key=" + getKey() + ", values=" + getObjects() + ")";
+        return "ListParam(key=" + getKey() + ", values=" + getObjects() + ")";
     }
 }

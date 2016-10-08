@@ -1,19 +1,19 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class FieldParameter implements Parameter {
+public class FieldParam implements Param {
     private final List<String> fields;
 
-    public FieldParameter(List<String> fields) {
+    public FieldParam(List<String> fields) {
         this.fields = fields;
     }
 
-    public FieldParameter(String... fields) {
+    public FieldParam(String... fields) {
         this(Arrays.asList(fields));
     }
 
@@ -36,6 +36,6 @@ public class FieldParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "FieldParameter(fields=" + this.fields + ")";
+        return "FieldParam(fields=" + this.fields + ")";
     }
 }

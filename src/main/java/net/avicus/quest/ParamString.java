@@ -7,11 +7,14 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-public class ParameterizedString {
+/**
+ * A string that has parameters (?, ?, ?).
+ */
+public class ParamString {
     private final String sql;
-    private final List<Parameter> parameters;
+    private final List<Param> parameters;
 
-    public ParameterizedString(String sql, List<Parameter> parameters) {
+    public ParamString(String sql, List<Param> parameters) {
         this.sql = sql;
         this.parameters = parameters;
     }
@@ -25,7 +28,7 @@ public class ParameterizedString {
     public int apply(PreparedStatement statement, int startingParameter) {
         int next = startingParameter;
 
-        for (Parameter parameter : this.parameters) {
+        for (Param parameter : this.parameters) {
             for (Object value : parameter.getObjects()) {
                 try {
                     statement.setObject(next, value);
@@ -43,12 +46,12 @@ public class ParameterizedString {
         return this.sql;
     }
 
-    public Collection<Parameter> getParameters() {
+    public Collection<Param> getParameters() {
         return this.parameters;
     }
 
     @Override
     public String toString() {
-        return "ParameterizedString(sql=" + this.sql + ", parameters=" + this.parameters + ")";
+        return "ParamString(sql=" + this.sql + ", parameters=" + this.parameters + ")";
     }
 }

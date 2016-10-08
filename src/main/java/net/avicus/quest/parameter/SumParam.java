@@ -1,18 +1,18 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.List;
 
-public class SumParameter implements Parameter {
-    private final Parameter expression;
+public class SumParam implements Param {
+    private final Param expression;
 
-    public SumParameter(Parameter expression) {
+    public SumParam(Param expression) {
         this.expression = expression;
     }
 
-    public SumParameter(String column) {
-        this(new FieldParameter(column));
+    public SumParam(String column) {
+        this(new FieldParam(column));
     }
 
     @Override
@@ -26,6 +26,6 @@ public class SumParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "SumParameter(expression=" + this.expression + ")";
+        return "SumParam(expression=" + this.expression + ")";
     }
 }

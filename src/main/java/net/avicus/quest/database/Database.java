@@ -1,7 +1,7 @@
 package net.avicus.quest.database;
 
 import net.avicus.quest.database.url.DatabaseUrl;
-import net.avicus.quest.parameter.FieldParameter;
+import net.avicus.quest.parameter.FieldParam;
 import net.avicus.quest.query.delete.Delete;
 import net.avicus.quest.query.delete.DeleteConfig;
 import net.avicus.quest.query.delete.DeleteResult;
@@ -42,12 +42,12 @@ public class Database {
         return Optional.ofNullable(this.connection);
     }
 
-    public Delete delete(FieldParameter table) {
+    public Delete delete(FieldParam table) {
         return new Delete(this, table);
     }
 
     public Delete delete(String table) {
-        return delete(new FieldParameter(table));
+        return delete(new FieldParam(table));
     }
 
     public DeleteResult rawDelete(String sql, Object... data) {
@@ -66,12 +66,12 @@ public class Database {
         return DeleteResult.execute(statement);
     }
 
-    public Insert insert(FieldParameter table) {
+    public Insert insert(FieldParam table) {
         return new Insert(this, table);
     }
 
     public Insert insert(String table) {
-        return insert(new FieldParameter(table));
+        return insert(new FieldParam(table));
     }
 
     public InsertResult rawInsert(String sql, Object... data) {
@@ -90,12 +90,12 @@ public class Database {
         return InsertResult.execute(statement);
     }
 
-    public Update update(FieldParameter table) {
+    public Update update(FieldParam table) {
         return new Update(this, table);
     }
 
     public Update update(String table) {
-        return new Update(this, new FieldParameter(table));
+        return new Update(this, new FieldParam(table));
     }
 
     public UpdateResult rawUpdate(String sql, Object... data) {
@@ -114,12 +114,12 @@ public class Database {
         return UpdateResult.execute(statement);
     }
 
-    public Select select(FieldParameter table) {
+    public Select select(FieldParam table) {
         return new Select(this, table);
     }
 
     public Select select(String table) {
-        return select(new FieldParameter(table));
+        return select(new FieldParam(table));
     }
 
     public SelectResult rawSelect(String sql, SelectConfig config, Object... data) {

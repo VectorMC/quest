@@ -1,7 +1,7 @@
 package net.avicus.quest.query.select;
 
-import net.avicus.quest.Parameter;
-import net.avicus.quest.ParameterizedString;
+import net.avicus.quest.Param;
+import net.avicus.quest.ParamString;
 import net.avicus.quest.query.Query;
 import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
@@ -14,16 +14,16 @@ import java.util.*;
 
 public class Select implements Query<SelectResult, SelectConfig>, Filterable<Select> {
     private final Database database;
-    private final FieldParameter table;
+    private final FieldParam table;
     private Filter filter;
-    private List<Parameter> columns;
-    private Parameter offset;
-    private Parameter limit;
-    private Parameter groupBy;
-    private List<Parameter> order;
-    private CustomParameter join;
+    private List<Param> columns;
+    private Param offset;
+    private Param limit;
+    private Param groupBy;
+    private List<Param> order;
+    private CustomParam join;
 
-    public Select(Database database, FieldParameter table) {
+    public Select(Database database, FieldParam table) {
         this.database = database;
         this.table = table;
     }
@@ -63,86 +63,86 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
         return select;
     }
 
-    public Select select(List<Parameter> columns) {
+    public Select select(List<Param> columns) {
         Select select = duplicate();
         select.columns = columns;
         return select;
     }
 
     public Select select(String... columns) {
-        List<Parameter> parameters = new ArrayList<>();
+        List<Param> parameters = new ArrayList<>();
         for (String column : columns) {
-            parameters.add(new FieldParameter(column));
+            parameters.add(new FieldParam(column));
         }
         return select(parameters);
     }
 
-    public Select select(Parameter... columns) {
+    public Select select(Param... columns) {
         return select(Arrays.asList(columns));
     }
 
-    public Select groupBy(Parameter groupBy) {
+    public Select groupBy(Param groupBy) {
         Select select = duplicate();
         select.groupBy = groupBy;
         return select;
     }
 
     public Select offset(int offset) {
-        return offset(new ObjectParameter(offset));
+        return offset(new ObjectParam(offset));
     }
 
-    public Select offset(Parameter offset) {
+    public Select offset(Param offset) {
         Select select = duplicate();
         select.offset = offset;
         return select;
     }
 
     public Select limit(int limit) {
-        return limit(new ObjectParameter(limit));
+        return limit(new ObjectParam(limit));
     }
 
-    public Select limit(Parameter limit) {
+    public Select limit(Param limit) {
         Select select = duplicate();
         select.limit = limit;
         return select;
     }
 
-    public Select order(Parameter... order) {
+    public Select order(Param... order) {
         return order(Arrays.asList(order));
     }
 
-    public Select order(List<Parameter> order) {
+    public Select order(List<Param> order) {
         Select select = duplicate();
         select.order = order;
         return select;
     }
 
-    public Select join(CustomParameter join) {
+    public Select join(CustomParam join) {
         Select select = duplicate();
         select.join = join;
         return select;
     }
 
     public Select join(String sql) {
-        return join(new CustomParameter(sql));
+        return join(new CustomParam(sql));
     }
 
-    public Select join(String sql, Parameter... params) {
-        return join(new CustomParameter(sql, params));
+    public Select join(String sql, Param... params) {
+        return join(new CustomParam(sql, params));
     }
 
-    public ParameterizedString build() {
+    public ParamString build() {
         StringBuilder sb = new StringBuilder();
-        List<Parameter> parameters = new ArrayList<>();
+        List<Param> parameters = new ArrayList<>();
 
         sb.append("SELECT ");
 
         // Columns to select
-        List<Parameter> columns = this.columns;
+        List<Param> columns = this.columns;
         if (columns == null || columns.isEmpty()) {
-            columns = Collections.singletonList(new WildcardParameter());
+            columns = Collections.singletonList(new WildcardParam());
         }
-        for (Parameter column : columns) {
+        for (Param column : columns) {
             sb.append(column.getKey());
             parameters.add(column);
 
@@ -164,7 +164,7 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
 
         if (this.filter != null) {
             sb.append(" WHERE ");
-            ParameterizedString filterString = this.filter.build();
+            ParamString filterString = this.filter.build();
             sb.append(filterString.getSql());
             parameters.addAll(filterString.getParameters());
         }
@@ -177,7 +177,7 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
 
         if (this.order != null) {
             sb.append(" ORDER BY ");
-            for (Parameter order : this.order) {
+            for (Param order : this.order) {
                 sb.append(order.getKey());
                 parameters.add(order);
             }
@@ -195,13 +195,13 @@ public class Select implements Query<SelectResult, SelectConfig>, Filterable<Sel
             }
         }
 
-        return new ParameterizedString(sb.toString(), parameters);
+        return new ParamString(sb.toString(), parameters);
     }
 
     @Override
     public SelectResult execute(Optional<SelectConfig> config) throws DatabaseException {
         // The query
-        ParameterizedString query = build();
+        ParamString query = build();
 
         // Create statement
         PreparedStatement statement = config.orElse(SelectConfig.DEFAULT).createStatement(this.database, query.getSql());

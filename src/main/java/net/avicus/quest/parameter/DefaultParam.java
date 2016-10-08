@@ -1,14 +1,20 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.Collections;
 import java.util.List;
 
-public class NullParameter implements Parameter {
+public class DefaultParam implements Param {
+    public static final DefaultParam INSTANCE = new DefaultParam();
+
+    private DefaultParam() {
+
+    }
+
     @Override
     public String getKey() {
-        return "NULL";
+        return "DEFAULT";
     }
 
     public List<Object> getObjects() {
@@ -17,6 +23,6 @@ public class NullParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "NullParameter()";
+        return "DefaultParam()";
     }
 }

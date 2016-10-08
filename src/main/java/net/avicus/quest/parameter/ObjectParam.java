@@ -1,14 +1,14 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ObjectParameter implements Parameter {
+public class ObjectParam implements Param {
     private final Object value;
 
-    public ObjectParameter(Object value) {
+    public ObjectParam(Object value) {
         this.value = value;
     }
 
@@ -23,6 +23,6 @@ public class ObjectParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "ObjectParameter(key=" + getKey() + ", values=" + getObjects() + ")";
+        return "ObjectParam(key=" + getKey() + ", values=" + getObjects() + ")";
     }
 }

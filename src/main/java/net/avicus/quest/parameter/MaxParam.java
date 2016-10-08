@@ -1,18 +1,18 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.List;
 
-public class MaxParameter implements Parameter {
-    private final Parameter expression;
+public class MaxParam implements Param {
+    private final Param expression;
 
-    public MaxParameter(Parameter expression) {
+    public MaxParam(Param expression) {
         this.expression = expression;
     }
 
-    public MaxParameter(String column) {
-        this(new FieldParameter(column));
+    public MaxParam(String column) {
+        this(new FieldParam(column));
     }
 
     @Override
@@ -26,6 +26,6 @@ public class MaxParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "MaxParameter(expression=" + this.expression + ")";
+        return "MaxParam(expression=" + this.expression + ")";
     }
 }

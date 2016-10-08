@@ -1,15 +1,13 @@
 package net.avicus.quest;
 
 import net.avicus.quest.database.DatabaseException;
+import net.avicus.quest.table.MappedColumn;
 import net.avicus.quest.query.select.SelectResult;
 import net.avicus.quest.table.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -70,6 +68,18 @@ public class Row {
             throw new IllegalArgumentException("Column name not present: " + column + ".");
         }
         return get(number);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <I, O> O getRequired(MappedColumn<I, O> column) {
+        I input = (I) get(column.getField()).asRequired(Object.class);
+        return column.map(input);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <I, O> Optional<O> get(MappedColumn<I, O> column) {
+        Optional<I> input = (Optional<I>) get(column.getField()).as(Object.class);
+        return input.map(column::map);
     }
 
     public <U> U map(RowMapper<U> mapper) {

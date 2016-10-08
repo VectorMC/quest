@@ -1,18 +1,18 @@
 package net.avicus.quest.parameter;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 
 import java.util.List;
 
-public class MinParameter implements Parameter {
-    private final Parameter expression;
+public class MinParam implements Param {
+    private final Param expression;
 
-    public MinParameter(Parameter expression) {
+    public MinParam(Param expression) {
         this.expression = expression;
     }
 
-    public MinParameter(String column) {
-        this(new FieldParameter(column));
+    public MinParam(String column) {
+        this(new FieldParam(column));
     }
 
     @Override
@@ -26,6 +26,6 @@ public class MinParameter implements Parameter {
 
     @Override
     public String toString() {
-        return "MinParameter(expression=" + this.expression + ")";
+        return "MinParam(expression=" + this.expression + ")";
     }
 }

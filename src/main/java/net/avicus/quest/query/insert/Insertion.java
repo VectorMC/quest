@@ -1,9 +1,9 @@
 package net.avicus.quest.query.insert;
 
-import net.avicus.quest.Parameter;
+import net.avicus.quest.Param;
 import net.avicus.quest.Row;
-import net.avicus.quest.parameter.NullParameter;
-import net.avicus.quest.parameter.ObjectParameter;
+import net.avicus.quest.parameter.NullParam;
+import net.avicus.quest.parameter.ObjectParam;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +11,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 public class Insertion {
-    private final Map<String, Parameter> values;
+    private final Map<String, Param> values;
 
-    public Insertion(Map<String, Parameter> values) {
+    public Insertion(Map<String, Param> values) {
         this.values = values;
     }
 
@@ -21,29 +21,29 @@ public class Insertion {
         return new Insertion(new HashMap<>(this.values));
     }
 
-    public Insertion with(String column, Parameter value) {
+    public Insertion with(String column, Param value) {
         Insertion insertion = duplicate();
         insertion.values.put(column, value);
         return insertion;
     }
 
     public Insertion with(String column, Object value) {
-        return with(column, new ObjectParameter(value));
+        return with(column, new ObjectParam(value));
     }
 
     public Set<String> getColumns() {
         return this.values.keySet();
     }
 
-    public Parameter getValue(String column) {
-        return this.values.containsKey(column) ? this.values.get(column) : new NullParameter();
+    public Param getValue(String column) {
+        return this.values.containsKey(column) ? this.values.get(column) : new NullParam();
     }
 
     public static Insertion fromRow(Row row) {
         Map<String, Object> data = row.toMap();
-        Map<String, Parameter> converted = new HashMap<>();
+        Map<String, Param> converted = new HashMap<>();
         for (Entry<String, Object> entry : data.entrySet()) {
-            converted.put(entry.getKey(), new ObjectParameter(entry.getValue()));
+            converted.put(entry.getKey(), new ObjectParam(entry.getValue()));
         }
         return new Insertion(converted);
     }
@@ -53,22 +53,22 @@ public class Insertion {
     }
 
     public static class InsertionBuilder {
-        private final Map<String, Parameter> values;
+        private final Map<String, Param> values;
 
         private InsertionBuilder() {
             this.values = new HashMap<>();
         }
 
-        public InsertionBuilder value(String column, Parameter value) {
+        public InsertionBuilder value(String column, Param value) {
             this.values.put(column, value);
             return this;
         }
 
         public InsertionBuilder value(String column, Object value) {
-            return value(column, new ObjectParameter(value));
+            return value(column, new ObjectParam(value));
         }
 
-        public InsertionBuilder values(Map<String, Parameter> values) {
+        public InsertionBuilder values(Map<String, Param> values) {
             this.values.putAll(values);
             return this;
         }
