@@ -20,6 +20,8 @@ public class ModelList<M extends Model> extends ArrayList<M> {
     }
 
     public M last() {
+        if (size() == 0)
+            return get(0);
         return get(size() - 1);
     }
 
