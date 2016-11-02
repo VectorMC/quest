@@ -16,12 +16,14 @@ public class ModelList<M extends Model> extends ArrayList<M> {
     }
 
     public M first() {
+        if (size() == 0)
+            return null;
         return get(0);
     }
 
     public M last() {
         if (size() == 0)
-            return get(0);
+            return null;
         return get(size() - 1);
     }
 
