@@ -7,6 +7,7 @@ import net.avicus.quest.database.Database;
 import net.avicus.quest.database.DatabaseException;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -120,7 +121,9 @@ public class Select implements Filterable {
         String sql = this.build();
         try(PreparedStatement statement = this.database.createQueryStatement(sql, true)) {
             RowList list = new RowList();
-            list.addRows(statement.executeQuery());
+            try(ResultSet set = statement.executeQuery()) {
+                list.addRows(set);
+            }
             return list;
         } catch (SQLException e) {
             throw new DatabaseException(String.format("Failed statement: %s", sql), e);

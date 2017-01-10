@@ -7,6 +7,7 @@ import net.avicus.quest.query.Operator;
 import net.avicus.quest.query.Select;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ModelSelect<M extends Model> implements Filterable {
@@ -62,7 +63,9 @@ public class ModelSelect<M extends Model> implements Filterable {
     public ModelList<M> execute() throws DatabaseException {
         try(PreparedStatement statement = this.table.getDatabase().createQueryStatement(build(), true)) {
             ModelList list = new ModelList<>(this.table);
-            list.addRows(statement.executeQuery());
+            try(ResultSet set = statement.executeQuery()) {
+                list.addRows(set);
+            }
             return list;
         } catch (SQLException e) {
             throw new DatabaseException(e);
