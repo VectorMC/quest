@@ -56,8 +56,7 @@ public class Database {
 
         sql.append(")");
 
-        PreparedStatement statement = createUpdateStatement(sql.toString());
-        try {
+        try(PreparedStatement statement = createUpdateStatement(sql.toString())) {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException("Failed to create table.", e);

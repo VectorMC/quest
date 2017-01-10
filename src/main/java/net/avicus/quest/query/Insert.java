@@ -57,16 +57,16 @@ public class Insert {
      */
     public Optional<Integer> execute() throws DatabaseException {
         String sql = this.build();
-        PreparedStatement statement = this.database.createUpdateStatement(sql);
-        try {
+        try(PreparedStatement statement = this.database.createUpdateStatement(sql)) {
             statement.executeUpdate();
 
             // generated keys
-            ResultSet set = statement.getGeneratedKeys();
-            if (set.next())
-                return Optional.of(set.getInt(1));
-
-            return Optional.empty();
+            try (ResultSet set = statement.getGeneratedKeys()) {
+                if (set.next()) {
+                    return Optional.of(set.getInt(1));
+                }
+                return Optional.empty();
+            }
         } catch (SQLException e) {
             throw new DatabaseException(String.format("Failed statement: %s", sql), e);
         }

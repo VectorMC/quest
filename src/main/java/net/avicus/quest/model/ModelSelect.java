@@ -60,8 +60,7 @@ public class ModelSelect<M extends Model> implements Filterable {
     }
 
     public ModelList<M> execute() throws DatabaseException {
-        PreparedStatement statement = this.table.getDatabase().createQueryStatement(build(), true);
-        try {
+        try(PreparedStatement statement = this.table.getDatabase().createQueryStatement(build(), true)) {
             ModelList list = new ModelList<>(this.table);
             list.addRows(statement.executeQuery());
             return list;
@@ -71,8 +70,7 @@ public class ModelSelect<M extends Model> implements Filterable {
     }
 
     public ModelIterator<M> executeIterator() throws DatabaseException {
-        PreparedStatement statement = this.table.getDatabase().createQueryStatement(build(), false);
-        try {
+        try(PreparedStatement statement = this.table.getDatabase().createQueryStatement(build(), false)) {
             return new ModelIterator<>(this.table, statement.executeQuery());
         } catch (SQLException e) {
             throw new DatabaseException(e);

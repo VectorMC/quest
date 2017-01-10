@@ -64,8 +64,7 @@ public class Delete implements Filterable {
 
     public void execute() throws DatabaseException {
         String sql = this.build();
-        PreparedStatement statement = this.database.createQueryStatement(sql, false);
-        try {
+        try(PreparedStatement statement = this.database.createQueryStatement(sql, false)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException(String.format("Failed statement: %s", sql), e);

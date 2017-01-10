@@ -86,8 +86,7 @@ public class Update implements Filterable {
 
     public void execute() throws DatabaseException {
         String sql = this.build();
-        PreparedStatement statement = this.database.createUpdateStatement(sql);
-        try {
+        try(PreparedStatement statement = this.database.createUpdateStatement(sql)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException(String.format("Failed statement: %s", sql), e);
