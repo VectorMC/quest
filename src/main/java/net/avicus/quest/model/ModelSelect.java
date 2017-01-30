@@ -73,7 +73,8 @@ public class ModelSelect<M extends Model> implements Filterable {
     }
 
     public ModelIterator<M> executeIterator() throws DatabaseException {
-        try(PreparedStatement statement = this.table.getDatabase().createQueryStatement(build(), false)) {
+        PreparedStatement statement = this.table.getDatabase().createQueryStatement(build(), false);
+        try {
             return new ModelIterator<>(this.table, statement.executeQuery());
         } catch (SQLException e) {
             throw new DatabaseException(e);

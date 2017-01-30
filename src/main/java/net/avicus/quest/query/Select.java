@@ -132,7 +132,8 @@ public class Select implements Filterable {
 
     public RowIterator executeIterator() throws DatabaseException {
         String sql = this.build();
-        try(PreparedStatement statement = this.database.createQueryStatement(sql, false)) {
+        PreparedStatement statement = this.database.createQueryStatement(sql, false);
+        try {
             return new RowIterator(statement.executeQuery());
         } catch (SQLException e) {
             throw new DatabaseException(String.format("Failed statement: %s", sql), e);
