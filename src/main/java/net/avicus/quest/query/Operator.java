@@ -4,6 +4,7 @@ import lombok.Getter;
 
 public enum Operator {
     EQUALS("="),
+    NOT_EQUAL("!="),
     LESS("<"),
     LESS_OR_EQUAL("<="),
     GREATER(">"),
