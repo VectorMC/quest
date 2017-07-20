@@ -164,6 +164,8 @@ public class Table<M extends Model> {
         }
         else if (field.getType() == int.class)
             type = "INT";
+        else if (field.getType() == long.class)
+            type = "BIGINT";
         else if (field.getType() == double.class)
             type = "DOUBLE";
         else if (field.getType() == float.class)
