@@ -8,19 +8,20 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
-    String name() default "";
 
-    boolean text() default false;
+  String name() default "";
 
-    int length() default -1;
+  boolean text() default false;
 
-    boolean nullable() default true;
+  int length() default -1;
 
-    boolean primaryKey() default false;
+  boolean nullable() default true;
 
-    boolean unique() default false;
+  boolean primaryKey() default false;
 
-    String def() default "";
+  boolean unique() default false;
 
-    String type() default "";
+  String def() default "";
+
+  String type() default "";
 }

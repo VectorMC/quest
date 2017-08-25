@@ -3,18 +3,19 @@ package net.avicus.quest.query;
 import lombok.Getter;
 
 public enum Operator {
-    EQUALS("="),
-    NOT_EQUAL("!="),
-    LESS("<"),
-    LESS_OR_EQUAL("<="),
-    GREATER(">"),
-    GREATER_OR_EQUAL(">="),
-    IN("IN"),
-    IS("IS");
+  EQUALS("="),
+  NOT_EQUAL("!="),
+  LESS("<"),
+  LESS_OR_EQUAL("<="),
+  GREATER(">"),
+  GREATER_OR_EQUAL(">="),
+  IN("IN"),
+  IS("IS");
 
-    @Getter private final String value;
+  @Getter
+  private final String value;
 
-    Operator(String value) {
-        this.value = value;
-    }
+  Operator(String value) {
+    this.value = value;
+  }
 }
