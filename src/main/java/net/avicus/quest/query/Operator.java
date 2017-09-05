@@ -10,6 +10,7 @@ public enum Operator {
   GREATER(">"),
   GREATER_OR_EQUAL(">="),
   IN("IN"),
+  LIKE("LIKE"),
   IS("IS");
 
   @Getter
